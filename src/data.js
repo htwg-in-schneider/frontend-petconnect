@@ -7,4 +7,5 @@ export const Ausschreibungen = [
     datum: "01.08.2026 - 04.08.2026",
     image: "/ImagesPetConnect/bärbel.jpg"
   }
+
 ]

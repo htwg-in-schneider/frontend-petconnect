@@ -181,7 +181,7 @@
     <p><a href="#">Impressum</a> | 
       <a href="#">Datenschutz</a> | 
       <a href="#">Kontakt</a></p>
-</footer>
+</footer >
 
 
 
