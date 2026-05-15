@@ -1,46 +1,11 @@
+<script setup>
+import Footer from '@/components/Footer.vue';
+import Navbar from '@/components/Navbar.vue';
+</script>
+
 <template>
 
-  <!-- NAVBAR START -->
-    <nav class="navbar navbar-expand-lg">
-    <div class="container">
-        <img src="/images/logo.jpg" width="60" class="me-2" alt="PetConnectLogo"> 
-        <a class="navbar-brand" href="#">PetConnect</a>
-       
-        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarOffcanvasLg" aria-controls="navbarOffcanvasLg" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="offcanvas offcanvas-end" tabindex="-1" id="navbarOffcanvasLg">
-            <div class="offcanvas-header">
-                <h5 id="navbarOffcanvasLgLabel">PetConnect</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-
-            <!-- FIX: UL ist jetzt IM offcanvas-body -->
-            <div class="offcanvas-body">
-                <ul class="navbar-nav ms-auto"> <!-- ms-auto hier fügt die "Right-Aligment" hinzu -->
-                    <li class="nav-item">
-                        <router-link class="nav-link" to="/ausschreibungen">
-  Ausschreibungen
-</router-link>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Über uns</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Anmelden</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Registrieren</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</nav>
-          
-    <!-- NAVBAR END -->
-
+<Navbar />
 
 <section class="top py-5"> <!--py-5 = Bootstrap (viel Abstand oben/unten)-->
   <div class="container">
@@ -178,18 +143,6 @@
   </div>
 </section>
 
-
-<footer class="footer py-4 text-center">
-    <img src="/images/logo.jpg" width="60" alt="PetConnectLogo">
-    <p><a href="#">Impressum</a> | 
-      <a href="#">Datenschutz</a> | 
-      <a href="#">Kontakt</a></p>
-</footer>
+<Footer />
 
 </template>
-
-<script setup>
-</script>
-
-<style scoped>
-</style>

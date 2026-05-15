@@ -1,8 +1,13 @@
 <script setup>
-import { ausschreibungen } from '../data.js'
+import { ausschreibungen } from '@/data.js'
+import Navbar from '@/components/Navbar.vue'
+import Footer from '@/components/Footer.vue'
+import AusschreibungCard from '@/components/AusschreibungCard.vue'
 </script>
 
 <template>
+
+<Navbar/>
 
 <section class="container py-5">
 
@@ -18,48 +23,16 @@ import { ausschreibungen } from '../data.js'
       class="col-md-6"
     >
 
-      <div class="custom-card">
-
-        <div class="image-wrapper">
-
-          <img
-            :src="ausschreibung.imageUrl"
-            class="card-image"
-            alt="Tierbild"
-          >
-
-          <span class="badge-custom">
-            {{ ausschreibung.type }}
-          </span>
-
-        </div>
-
-        <div class="card-content">
-
-          <h3>
-            {{ ausschreibung.name }},
-            {{ ausschreibung.age }} Jahre
-          </h3>
-
-          <p>
-          <!--<img src="/images/Green_location_pin_icon.png" class="small-icon" alt="Standort">-->
-           {{ ausschreibung.city }}
-          </p>
-
-          <p>
-          <!-- <img src="/images/calendar_icon.png" class="small-icon" alt="Kalender"-->
-  >
-           {{ ausschreibung.date }}
-          </p>
-
-        </div>
-
-      </div>
+    <AusschreibungCard
+        :ausschreibung="ausschreibung"
+      />
 
     </div>
 
   </div>
 
 </section>
+
+<Footer />
 
 </template>
