@@ -1,3 +1,7 @@
+<script setup>
+import Button from './Button.vue'
+</script>
+
 <template>
 <nav class="navbar navbar-expand-lg">
     <div class="container">
@@ -14,22 +18,26 @@
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
 
-            <!-- FIX: UL ist jetzt IM offcanvas-body -->
+        
             <div class="offcanvas-body">
                 <ul class="navbar-nav ms-auto"> <!-- ms-auto hier fügt die "Right-Aligment" hinzu -->
+
                     <li class="nav-item">
-                        <router-link class="nav-link" to="/ausschreibungen">
-                          Ausschreibungen
+                        <router-link to="/ausschreibungen">
+                            <Button variant="secondary">Ausschreibungen</Button>
                         </router-link>
                     </li>
+
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Über uns</a>
+                        <Button variant="secondary">Über uns</Button>
                     </li>
+
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Anmelden</a>
+                         <Button variant="secondary">Anmelden</Button>
                     </li>
+
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Registrieren</a>
+                        <Button variant="secondary">Registrieren</Button>
                     </li>
                 </ul>
             </div>
@@ -42,6 +50,10 @@
 <style scoped>
 .navbar {
     background-color: #E8CFCF; 
+}
+
+.nav-item {
+    margin-bottom: 15px;
 }
 
 /* Burger-Menü Button */

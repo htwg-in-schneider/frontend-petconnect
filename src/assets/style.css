@@ -27,13 +27,6 @@ h5{
     font-size: 1.2rem;
 }
 
-/* BUTTON */ 
-.btn2 {
-    background-color: #9BAF96;
-    border: none;
-    padding: 10px 20px;
-}                                   
-
 /* BILDER */
 .image-main { /*Rahmen um Hauptbild*/
     border: 20px solid #FAFBCD;

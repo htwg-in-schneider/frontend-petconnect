@@ -1,6 +1,7 @@
 <script setup>
 import Footer from '@/components/Footer.vue';
 import Navbar from '@/components/Navbar.vue';
+import Button from '@/components/Button.vue';
 </script>
 
 <template>
@@ -22,7 +23,7 @@ import Navbar from '@/components/Navbar.vue';
           Wir helfen dir, die perfekte Betreuung zu finden –
           schnell und unkompliziert.
         </p>
-        <button class="btn btn2">Ausschreibung hochladen</button>
+        <Button variant="accent">Ausschreibung hochladen</Button>
       </div>
 
       
