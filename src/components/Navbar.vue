@@ -1,7 +1,7 @@
 <template>
 <nav class="navbar navbar-expand-lg">
     <div class="container">
-        <img src="/images/logo.jpg" width="60" class="me-2" alt="PetConnectLogo"> 
+        <img src="../assets/images/logo.jpg" width="60" class="me-2" alt="PetConnectLogo"> 
         <a class="navbar-brand" href="#">PetConnect</a>
        
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarOffcanvasLg" aria-controls="navbarOffcanvasLg" aria-label="Toggle navigation">

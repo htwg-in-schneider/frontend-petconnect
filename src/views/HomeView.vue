@@ -29,15 +29,15 @@ import Navbar from '@/components/Navbar.vue';
       <div class="col-lg-6 position-relative text-center mt-4 mt-lg-0">
 
         <div class="image-main">
-          <img src="/images/goldenretriever.jpg" class="img-fluid" alt="GoldenRetriever"> <!--passt sich Bildschirm an wird nicht zu groß-->
+          <img src="../assets/images/goldenretriever.jpg" class="img-fluid" alt="GoldenRetriever"> <!--passt sich Bildschirm an wird nicht zu groß-->
         </div>
 
         <div class="image-small-left">
-          <img src="/images/hundundkatze.jpg" alt="HundUndKatze">
+          <img src="../assets/images/hundundkatze.jpg" alt="HundUndKatze">
         </div>
 
         <div class="image-small-right">
-          <img src="/images/hund-header.jpg" alt="Hund">
+          <img src="../assets/images/hund-header.jpg" alt="Hund">
         </div>
 
       </div>
@@ -51,24 +51,24 @@ import Navbar from '@/components/Navbar.vue';
   <div class="container">
 
     <h2>So funktioniert’s</h2>
-    <img src="/images/Colorful_paws.png" class="mb-3" width="120" alt="FarbigePfotenabdrücke">
+    <img src="../assets/images/Colorful_paws.png" class="mb-3" width="120" alt="FarbigePfotenabdrücke">
 
     <div class="row mt-4 g-4">
 
       <div class="col-md-4"> <!-- 4 von 12 Spalten-->
-        <img src="/images/User_Icon_Green.png" class="icon mb-2" alt="UserIcon">
+        <img src="../assets/images/User_Icon_Green.png" class="icon mb-2" alt="UserIcon">
         <h5><span class="number">1</span> Registrieren</h5>
         <p>Erstelle ein Profil als Tierbesitzer oder Tiersitter - kostenlos und einfach.</p>
       </div>
 
       <div class="col-md-4">
-        <img src="/images/Lupe_Icon_Rosa.png" class="icon mb-2" alt="LupeIcon">
+        <img src="../assets/images/Lupe_Icon_Rosa.png" class="icon mb-2" alt="LupeIcon">
         <h5><span class="number">2</span> Finden</h5>
         <p>Durchsuche passende Anzeigen in deiner Umgebung.</p>
       </div>
 
       <div class="col-md-4">
-        <img src="/images/Speechbubble_Icon_green.png" class="icon mb-2" alt="SprechblaseIcon">
+        <img src="../assets/images/Speechbubble_Icon_green.png" class="icon mb-2" alt="SprechblaseIcon">
         <h5><span class="number">3</span> Verbinden</h5>
         <p>Nehmt Kontakt auf und besprecht privat alle Details.</p>
       </div>
@@ -82,13 +82,13 @@ import Navbar from '@/components/Navbar.vue';
   <div class="container">
 
     <h2>Warum PetConnect?</h2>
-    <img src="/images/Colorful_paws.png" class="mb-4" width="120" alt="FarbigePfotenabdrücke">
+    <img src="../assets/images/Colorful_paws.png" class="mb-4" width="120" alt="FarbigePfotenabdrücke">
 
     <div class="row mt-4 g-4"> <!--g-4 = Abstand zwischen Spalten-->
 
       <div class="col-md-4">
         <div class="card-box">
-          <img src="/images/Green_location_pin_icon.png" class="icon mb-2" alt="LocationIcon">
+          <img src="../assets/images/Green_location_pin_icon.png" class="icon mb-2" alt="LocationIcon">
           <h6>In deiner Umgebung</h6>
           <p>Filtere nach Standort und finde Tierbesitzer ganz in deiner Nähe</p>
         </div>
@@ -96,7 +96,7 @@ import Navbar from '@/components/Navbar.vue';
 
       <div class="col-md-4">
         <div class="card-box">
-          <img src="/images/calendar_icon.png" class="icon mb-2" alt="KalenderIcon">
+          <img src="../assets/images/calendar_icon.png" class="icon mb-2" alt="KalenderIcon">
           <h6>Schnell & unkompliziert</h6>
           <p>Einfach, benutzerfreundlich und in wenigen Klicks startklar</p>
         </div>
@@ -104,7 +104,7 @@ import Navbar from '@/components/Navbar.vue';
 
       <div class="col-md-4">
         <div class="card-box">
-          <img src="/images/shield_icon.png" class="icon mb-2" alt="ShieldIcon">
+          <img src="../assets/images/shield_icon.png" class="icon mb-2" alt="ShieldIcon">
           <h6>Direkter Austausch</h6>
           <p>Chatfunktion und Profilbewertungen schaffen Vertrauen</p>
         </div>
@@ -120,7 +120,7 @@ import Navbar from '@/components/Navbar.vue';
 
     <div class="bewertung-header">
   <h2>Überzeug dich selbst: Das sagen unsere Nutzer über uns...</h2>
-  <img src="/images/knochen.png" class="knochenbild" alt="Hundeknochen">
+  <img src="../assets/images/knochen.png" class="knochenbild" alt="Hundeknochen">
 </div>
 
     <div class="review">

@@ -1,6 +1,6 @@
 <template>
 <footer class="footer py-4 text-center">
-    <img src="/images/logo.jpg" width="60" alt="PetConnectLogo">
+    <img src="../assets/images/logo.jpg" width="60" alt="PetConnectLogo">
     <p><a href="#">Impressum</a> | 
       <a href="#">Datenschutz</a> | 
       <a href="#">Kontakt</a></p>

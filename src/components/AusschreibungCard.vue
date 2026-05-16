@@ -32,12 +32,12 @@ defineProps({
     </h3>
 
     <p>
-      <img src="/images/Green_location_pin_icon.png" class="small-icon" alt="Standort">
+      <img src="../assets/images/Green_location_pin_icon.png" class="small-icon" alt="Standort">
       {{ ausschreibung.city }}
     </p>
 
     <p>
-      <img src="/images/calendar_icon.png" class="small-icon" alt="Kalender">
+      <img src="../assets/images/calendar_icon.png" class="small-icon" alt="Kalender">
       {{ ausschreibung.date }}
     </p>
 
