@@ -4,7 +4,7 @@ import HomeView from '../views/HomeView.vue'
 import AusschreibungenView from '../views/AusschreibungenView.vue'
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory('/frontend-petconnect/'),
 
   routes: [
     {
