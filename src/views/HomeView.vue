@@ -2,11 +2,15 @@
 import Footer from '@/components/Footer.vue';
 import Navbar from '@/components/Navbar.vue';
 import Button from '@/components/Button.vue';
+import SpecialBanner from '@/components/SpecialBanner.vue'
 </script>
 
 <template>
 
+<SpecialBanner/>
+
 <Navbar />
+
 
 <section class="top py-5"> <!--py-5 = Bootstrap (viel Abstand oben/unten)-->
   <div class="container">
