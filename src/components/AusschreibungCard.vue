@@ -1,5 +1,5 @@
 <script setup>
-
+import { RouterLink } from 'vue-router'
 defineProps({
   ausschreibung: Object
 })
@@ -8,6 +8,10 @@ defineProps({
 
 <template>
 
+<RouterLink
+  :to="`/ausschreibung/${ausschreibung.id}`"
+  class="card-link"
+>
 <div class="custom-card">
 
   <div class="image-wrapper">
@@ -45,9 +49,16 @@ defineProps({
 
 </div>
 
+</RouterLink>
+
 </template>
 
 <style scoped>
+
+.card-link {
+    text-decoration: none;
+    color: inherit;
+}
 
 .custom-card {
     background-color: #9BAF96;
