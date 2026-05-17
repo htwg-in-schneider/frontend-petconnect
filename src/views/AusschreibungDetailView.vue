@@ -1,19 +1,40 @@
 <script setup>
 
+import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { ausschreibungen } from '@/data.js'
 
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import Button from '@/components/Button.vue'
 
 const route = useRoute()
+const ausschreibung = ref(null) // ref, damit es reaktiv ist
 
-const ausschreibung = ausschreibungen.find(
-  a => a.id == route.params.id
-)
+const url = 'https://dummyjson.com/products' //testdaten 
+
+onMounted(async () => {
+  try {
+    const response = await fetch(`${url}/${route.params.id}`) //mit fetch die Daten abruft von derurl, bestimmtes product wird anhand der id geholt
+    const data = await response.json()
+
+    //Daten anpassen für unsere Tierkarten
+    ausschreibung.value = {
+      id: data.id,
+      name: data.title,
+      age: 2,
+      city: "Konstanz",
+      date: "01.08.2026",
+      type: data.id % 2 === 0 ? "Bezahlung" : "Tausch",
+      imageUrl: data.thumbnail,
+      description: data.description || "Keine Beschreibung vorhanden"
+    }
+  } catch (error) {
+    console.error('Fehler beim Laden:', error)
+  }
+})
 
 </script>
+
 
 <template>
 
