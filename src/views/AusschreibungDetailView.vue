@@ -10,24 +10,17 @@ import Button from '@/components/Button.vue'
 const route = useRoute()
 const ausschreibung = ref(null) // ref, damit es reaktiv ist
 
-const url = 'https://dummyjson.com/products' //testdaten 
+const url = 'http://localhost:8081/api/ausschreibungen';
 
 onMounted(async () => {
   try {
     const response = await fetch(`${url}/${route.params.id}`) //mit fetch die Daten abruft von derurl, bestimmtes product wird anhand der id geholt
-    const data = await response.json()
-
-    //Daten anpassen für unsere Tierkarten
-    ausschreibung.value = {
-      id: data.id,
-      name: data.title,
-      age: 2,
-      city: "Konstanz",
-      date: "01.08.2026",
-      type: data.id % 2 === 0 ? "Bezahlung" : "Tausch",
-      imageUrl: data.thumbnail,
-      description: data.description || "Keine Beschreibung vorhanden"
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
+
+    ausschreibung.value = await response.json();
+    console.log(product.value);
   } catch (error) {
     console.error('Fehler beim Laden:', error)
   }
@@ -78,7 +71,7 @@ onMounted(async () => {
       alt="Kalender"
     >
 
-    {{ ausschreibung.date }}
+    {{ ausschreibung.dateFrom }} - {{ ausschreibung.dateTo }}
 
   </div>
 
@@ -91,17 +84,17 @@ onMounted(async () => {
 
     <div class="info-box">
       <small>Tiername</small>
-      <p>{{ ausschreibung.name }}</p>
+      <p>{{ ausschreibung.petName }}</p>
     </div>
 
     <div class="info-box">
       <small>Alter</small>
-      <p>{{ ausschreibung.age }} Jahre</p>
+      <p>{{ ausschreibung.petAge }} Jahre</p>
     </div>
 
     <div class="info-box">
       <small>Vergütung</small>
-      <p>{{ ausschreibung.type }}</p>
+      <p>{{ ausschreibung.compensation }}</p>
     </div>
 
   </div>

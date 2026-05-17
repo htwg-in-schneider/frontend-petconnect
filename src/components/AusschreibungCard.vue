@@ -23,7 +23,7 @@ defineProps({
     >
 
     <span class="badge-custom">
-      {{ ausschreibung.type }}
+      {{ ausschreibung.compensation }}
     </span>
 
   </div>
@@ -31,8 +31,8 @@ defineProps({
   <div class="card-content">
 
     <h3>
-      {{ ausschreibung.name }},
-      {{ ausschreibung.age }} Jahre
+      {{ ausschreibung.petName }},
+      {{ ausschreibung.petAge }} Jahre
     </h3>
 
     <p>
@@ -42,7 +42,7 @@ defineProps({
 
     <p>
       <img src="../assets/images/calendar_icon.png" class="small-icon" alt="Kalender">
-      {{ ausschreibung.date }}
+      {{ ausschreibung.dateFrom }} - {{ ausschreibung.dateTo }}
     </p>
 
   </div>
