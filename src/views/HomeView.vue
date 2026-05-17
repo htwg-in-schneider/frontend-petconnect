@@ -27,7 +27,9 @@ import SpecialBanner from '@/components/SpecialBanner.vue'
           Wir helfen dir, die perfekte Betreuung zu finden –
           schnell und unkompliziert.
         </p>
-        <Button variant="accent">Ausschreibung hochladen</Button>
+        <router-link to="/ausschreibungen">
+            <Button variant="accent">Ausschreibung hochladen</Button>
+        </router-link>
       </div>
 
       

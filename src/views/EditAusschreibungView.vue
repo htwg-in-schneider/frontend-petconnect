@@ -1,0 +1,277 @@
+<script setup>
+
+import { ref, onMounted } from 'vue'
+import Button from '@/components/Button.vue'
+import Navbar from '@/components/Navbar.vue'
+import Footer from '@/components/Footer.vue'
+
+import {
+  useRoute,
+  useRouter
+} from 'vue-router'
+
+const route = useRoute()
+const router = useRouter()
+
+const url ='http://localhost:8081/api/ausschreibungen'
+
+const ausschreibung = ref({})
+
+onMounted(async () => {
+  await fetchAusschreibung()
+})
+
+async function fetchAusschreibung() {
+  const ausschreibungId =route.params.id
+  try {
+    const response =await fetch(`${url}/${ausschreibungId}`)
+    if (!response.ok) {
+      throw new Error(
+        `Ausschreibung nicht gefunden`)
+    }
+    ausschreibung.value = await response.json()
+  } catch (error) {
+    console.error(error)
+    alert('Ausschreibung konnte nicht geladen werden.')
+    router.push('/ausschreibungen')
+  }
+}
+
+async function updateAusschreibung() {
+  try {
+    const response = await fetch(`${url}/${ausschreibung.value.id}`,
+      {method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(
+          ausschreibung.value
+        )
+      }
+    )
+    if (!response.ok) {
+      throw new Error()
+    }
+    alert('Ausschreibung erfolgreich aktualisiert!')
+    router.push('/ausschreibungen')
+  }
+  catch (error) {
+    console.error(error)
+    alert('Ausschreibung konnte nicht aktualisiert werden.')
+  }
+}
+
+function cancelEdit() {
+  router.push(
+    `/ausschreibung/${ausschreibung.value.id}`
+  )
+}
+</script>
+
+<template>
+<Navbar/>
+<div class="container py-4">
+  <h2 class="fw-bold mb-4">
+    Ausschreibung bearbeiten
+  </h2>
+
+  <form @submit.prevent="updateAusschreibung">
+
+    <!-- Tierart -->
+    <div class="mb-3">
+      <label class="form-label">
+        Tierart
+      </label>
+      <select
+        class="form-select"
+        v-model="ausschreibung.animalType"
+      >
+        <option disabled value="">
+          Bitte wählen
+        </option>
+
+        <option value="DOG">
+          Hund
+        </option>
+
+        <option value="CAT">
+          Katze
+        </option>
+
+        <option value="RABBIT">
+          Kaninchen
+        </option>
+
+        <option value="BIRD">
+          Vogel
+        </option>
+      </select>
+    </div>
+
+    <!-- Tiername -->
+    <div class="mb-3">
+      <label class="form-label">
+        Tiername
+      </label>
+      <input
+        type="text"
+        class="form-control"
+        v-model="ausschreibung.petName"
+      >
+    </div>
+
+    <!-- Alter -->
+    <div class="mb-3">
+      <label class="form-label">
+        Alter
+      </label>
+      <input
+        type="number"
+        class="form-control"
+        v-model="ausschreibung.petAge"
+      >
+    </div>
+
+    <!-- Beschreibung -->
+    <div class="mb-3">
+      <label class="form-label">
+        Beschreibung
+      </label>
+      <textarea
+        class="form-control description-box"
+        v-model="ausschreibung.description">
+      </textarea>
+    </div>
+
+    <!-- PLZ -->
+    <div class="mb-3">
+      <label class="form-label">
+        Postleitzahl
+      </label>
+      <input
+        type="text"
+        class="form-control"
+        v-model="ausschreibung.postalCode"
+      >
+    </div>
+
+    <!-- Stadt -->
+    <div class="mb-3">
+      <label class="form-label">
+        Stadt
+      </label>
+      <input
+        type="text"
+        class="form-control"
+        v-model="ausschreibung.city"
+      >
+    </div>
+
+    <!-- Vergütung -->
+    <div class="mb-3">
+      <label class="form-label">
+        Vergütung
+      </label>
+      <select
+        class="form-select"
+        v-model="ausschreibung.compensation"
+      >
+        <option value="Tausch">
+          Tausch
+        </option>
+        <option value="Bezahlung">
+          Bezahlung
+        </option>
+      </select>
+    </div>
+
+    <!-- Bild URL -->
+    <div class="mb-3">
+      <label class="form-label">
+        Bild URL
+      </label>
+      <input
+        type="text"
+        class="form-control"
+        v-model="ausschreibung.imageUrl"
+      >
+    </div>
+
+    <!-- Bild Vorschau -->
+    <div class="text-center mb-4">
+      <img
+        :src="ausschreibung.imageUrl"
+        class="preview-image"
+        alt="Tierbild"
+      >
+    </div>
+
+    <!-- Datum -->
+    <div class="row">
+      <div class="col-6 mb-4">
+        <label class="form-label">
+          Von
+        </label>
+        <input
+          type="date"
+          class="form-control"
+          v-model="ausschreibung.dateFrom"
+        >
+      </div>
+      <div class="col-6 mb-4">
+        <label class="form-label">
+          Bis
+        </label>
+        <input
+          type="date"
+          class="form-control"
+          v-model="ausschreibung.dateTo"
+        >
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="button-group">
+        <Button type="submit" variant="accent">
+        Speichern
+        </Button>
+
+        <Button type="button" variant="secondary" @click="cancelEdit">
+        Abbrechen
+        </Button>
+    </div>
+  </form>
+</div>
+
+<Footer/>
+</template>
+
+<style scoped>
+.container {
+  max-width: 500px;
+}
+
+.form-control,
+.form-select {
+  border-radius: 10px;
+}
+
+.description-box {
+  min-height: 150px;
+}
+
+.preview-image {
+  width: 100%;
+  border-radius: 20px;
+  object-fit: cover;
+}
+
+.button-group {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    justify-content: center;
+}
+
+</style>

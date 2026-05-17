@@ -1,13 +1,17 @@
 <script setup>
 
 import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import {
+  useRoute,
+  useRouter
+} from 'vue-router'
 
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import Button from '@/components/Button.vue'
 
 const route = useRoute()
+const router = useRouter()
 const ausschreibung = ref(null) // ref, damit es reaktiv ist
 
 const url = 'http://localhost:8081/api/ausschreibungen';
@@ -20,14 +24,59 @@ onMounted(async () => {
     }
 
     ausschreibung.value = await response.json();
-    console.log(product.value);
+    console.log(ausschreibung.value);
   } catch (error) {
     console.error('Fehler beim Laden:', error)
   }
 })
 
-</script>
+async function deleteAusschreibung() {
 
+  if (
+    !confirm(
+      'Möchten Sie diese Ausschreibung wirklich löschen?'
+    )
+  ) return
+
+  try {
+
+    const response = await fetch(
+
+      `${url}/${ausschreibung.value.id}`,
+
+      {
+        method: 'DELETE'
+      }
+
+    )
+
+    if (!response.ok) {
+
+      throw new Error()
+
+    }
+
+    alert(
+      'Ausschreibung erfolgreich gelöscht!'
+    )
+
+    router.push('/ausschreibungen')
+
+  }
+
+  catch (error) {
+
+    console.error(error)
+
+    alert(
+      'Ausschreibung konnte nicht gelöscht werden.'
+    )
+
+  }
+
+}
+
+</script>
 
 <template>
 
@@ -110,17 +159,17 @@ onMounted(async () => {
   </div>
 
   <div class="button-group">
-
+    <RouterLink
+    :to="`/ausschreibung/edit/${ausschreibung.id}`">
     <Button variant="accent">
-      Anzeige bearbeiten
+      Bearbeiten
     </Button>
+    </RouterLink>
 
-    <Button variant="accent">
+    <Button variant="secondary" @click="deleteAusschreibung">
       Anzeige löschen
     </Button>
-
   </div>
-
 </section>
 
 <Footer />
@@ -176,9 +225,9 @@ onMounted(async () => {
 .button-group {
     margin-top: 40px;
     display: flex;
-    flex-direction: column;
-    gap: 20px;
-    align-items: center;
+    flex-direction: row;
+    gap: 40px;
+    justify-content: center;
 }
 
 </style>

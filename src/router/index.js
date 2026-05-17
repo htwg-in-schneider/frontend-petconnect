@@ -3,6 +3,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import AusschreibungenView from '../views/AusschreibungenView.vue'
 import AusschreibungDetailView from '../views/AusschreibungDetailView.vue'
+import CreateAusschreibungView from '../views/CreateAusschreibungView.vue'
+import EditAusschreibungView from '../views/EditAusschreibungView.vue'
 
 const router = createRouter({
   history: createWebHistory('/frontend-petconnect/'),
@@ -24,6 +26,18 @@ const router = createRouter({
       path: '/ausschreibung/:id',
       name: 'ausschreibung-detail',
       component: AusschreibungDetailView,
+    },
+
+    {
+      path: '/ausschreibung/create',
+      name: 'ausschreibung-create',
+      component: CreateAusschreibungView,
+    },
+
+    {
+      path: '/ausschreibung/edit/:id',
+      name: 'ausschreibung-edit',
+      component: EditAusschreibungView,
     },
   ],
 })
