@@ -30,50 +30,41 @@ onMounted(async () => {
   }
 })
 
+const showDeleteSuccess = ref(false)
+const showConfirmDelete = ref(false)
+
 async function deleteAusschreibung() {
 
-  if (
-    !confirm(
-      'Möchten Sie diese Ausschreibung wirklich löschen?'
-    )
-  ) return
-
+  const confirmed = confirm(
+    'Bist du sicher, dass du die Anzeige löschen möchtest?'
+  )
+  if (!confirmed) return
   try {
-
     const response = await fetch(
-
       `${url}/${ausschreibung.value.id}`,
-
       {
         method: 'DELETE'
       }
-
     )
-
     if (!response.ok) {
 
       throw new Error()
 
     }
+    showDeleteSuccess.value = true
 
-    alert(
-      'Ausschreibung erfolgreich gelöscht!'
-    )
-
+    setTimeout(() => {
+    showDeleteSuccess.value = false
     router.push('/ausschreibungen')
 
+    }, 2000)
   }
-
   catch (error) {
-
-    console.error(error)
-
-    alert(
+  console.error(error)
+  alert(
       'Ausschreibung konnte nicht gelöscht werden.'
     )
-
   }
-
 }
 
 </script>
@@ -174,6 +165,13 @@ async function deleteAusschreibung() {
 
 <Footer />
 
+<div
+  v-if="showDeleteSuccess"
+  class="success-popup"
+>
+  Anzeige erfolgreich gelöscht!
+</div>
+
 </template>
 
 <style scoped>
@@ -228,6 +226,36 @@ async function deleteAusschreibung() {
     flex-direction: row;
     gap: 40px;
     justify-content: center;
+}
+
+.success-popup {
+
+  position: fixed;
+
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+  padding: 40px 70px;
+
+  border-radius: 25px;
+
+  color: white;
+
+  font-size: 2rem;
+  font-weight: bold;
+
+  background-color: #9BAF96;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+
+  z-index: 9999;
+
+  text-align: center;
+
+  min-width: 400px;
+
 }
 
 </style>
