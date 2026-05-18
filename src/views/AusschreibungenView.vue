@@ -74,15 +74,13 @@ try {
   <input
     v-model="filterCity"
     class="form-control mb-2"
-    placeholder="Ort filtern"
-  />
+    placeholder="Ort filtern"/>
 
   <select v-model="filterCompensation" class="form-select mb-2">
     <option value="">Alle Vergütungen</option>
     <option value="Tausch">Tausch</option>
     <option value="Bezahlung">Bezahlung</option>
   </select>
-
 
   </h1>
 
@@ -91,8 +89,7 @@ try {
     <div
       v-for="ausschreibung in filteredAusschreibungen"
       :key="ausschreibung.id"
-      class="col-md-6"
-    >
+      class="col-md-6">
 
     <AusschreibungCard
         :ausschreibung="ausschreibung"
