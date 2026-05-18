@@ -5,8 +5,13 @@ import { ref, onMounted, computed } from 'vue'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import AusschreibungCard from '@/components/AusschreibungCard.vue'
-const url = 'http://localhost:8081/api/ausschreibungen';
 import Button from '@/components/Button.vue'
+
+const url = 'http://localhost:8081/api/ausschreibungen';
+const animalTypeUrl = 'http://localhost:8081/api/animaltype'
+
+const animalTypes = ref([])
+const translations = ref({})
 
 const ausschreibungen = ref([])
 const search = ref('') /*suchleiste*/
@@ -15,7 +20,35 @@ const filterCompensation = ref('')
 
 
 
-onMounted(async () => fetchAusschreibungen())
+onMounted(async () => {
+ await Promise.all([
+    fetchAusschreibungen(),
+    fetchAnimalTypes(),
+    fetchTranslations()
+  ])
+})
+
+async function fetchAnimalTypes() {
+  try {
+    const response = await fetch(animalTypeUrl)
+    if (response.ok) {
+      animalTypes.value = await response.json()
+    }
+  } catch (error) {
+    console.error('Error fetching animal types:',error)
+  }
+}
+
+async function fetchTranslations() {
+  try {
+    const response = await fetch(`${animalTypeUrl}/translation`)
+    if (response.ok) {
+      translations.value = await response.json()
+    }
+  } catch (error) {
+    console.error('Error fetching translations:',error)
+  }
+}
   
   const filteredAusschreibungen = computed(() => {
   return ausschreibungen.value.filter(a => {
@@ -23,7 +56,7 @@ onMounted(async () => fetchAusschreibungen())
     const searchText = search.value.toLowerCase()
     const matchesSearch =
       a.city.toLowerCase().includes(searchText) ||
-      a.animalType.toLowerCase().includes(searchText)
+      (translations.value[a.animalType] || '').toLowerCase().includes(searchText)
 
     const matchesAnimal = filterAnimal.value === '' ||
       a.animalType === filterAnimal.value
@@ -75,14 +108,19 @@ try {
 
 </div>
 <div class="filter-bar">
-<select
+  <select
     v-model="filterAnimal"
     class="filter-item">
-    <option value="">Alle Tiere</option>
-    <option value="DOG">Hund</option>
-    <option value="CAT">Katze</option>
-    <option value="RABBIT">Kaninchen</option>
-    <option value="BIRD">Vogel</option>
+    <option value="">
+    Alle Tiere
+    </option>
+    <option
+    v-for="animal in animalTypes"
+    :key="animal"
+    :value="animal"
+  >
+    {{ translations[animal] || animal }}
+  </option>
   </select>
 
   <select
@@ -93,6 +131,13 @@ try {
     <option value="Bezahlung">Bezahlung</option>
   </select>
 
+</div>
+
+<div
+  v-if="filteredAusschreibungen.length === 0"
+  class="no-results"
+>
+Keine passenden Ausschreibungen gefunden.
 </div>
 
   <div class="row g-5">
@@ -122,6 +167,12 @@ try {
 </template>
 
 <style scoped>
+.no-results {
+  text-align: center;
+  margin: 50px;
+  font-size: 1.3rem;
+  color: #777;
+}
 .button-group {
     margin-top: 40px;
     display: flex;
@@ -173,6 +224,21 @@ try {
   outline: none;
   border-color: #9BAF96;
   box-shadow: 0 0 8px rgba(155,175,150,0.4);
+}
+
+@media (max-width: 768px) {
+  .filter-bar {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .filter-item {
+    width: 100%;
+  }
+
+  .search-input {
+    width: 100%;
+  }
 }
 
 </style>
