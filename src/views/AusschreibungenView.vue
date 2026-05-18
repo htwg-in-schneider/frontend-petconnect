@@ -1,6 +1,5 @@
 <script setup>
 
-
 import { ref, onMounted, computed } from 'vue'
 
 import Navbar from '@/components/Navbar.vue'
@@ -93,6 +92,7 @@ try {
     <option value="Tausch">Tausch</option>
     <option value="Bezahlung">Bezahlung</option>
   </select>
+
 </div>
 
   <div class="row g-5">
@@ -137,7 +137,7 @@ try {
   width: 100%;
   max-width: 600px;
   border-radius: 20px;
-  border: 4px solid #D0A6A6;
+  border: 2px solid #D0A6A6;
   padding: 12px 20px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.05);
   transition: 0.2s;
@@ -162,7 +162,7 @@ try {
 .filter-item {
   flex: 1;
   border-radius: 20px;
-  border: 4px solid #D0A6A6;
+  border: 2px solid #D0A6A6;
   padding: 12px 15px;
   background-color: white;
   transition: 0.2s;
