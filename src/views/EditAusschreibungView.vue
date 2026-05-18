@@ -16,6 +16,8 @@ const router = useRouter()
 const url ='http://localhost:8081/api/ausschreibungen'
 
 const ausschreibung = ref({})
+const showUpdateSuccess = ref(false)
+const showUpdateError = ref(false)
 
 onMounted(async () => {
   await fetchAusschreibung()
@@ -52,12 +54,20 @@ async function updateAusschreibung() {
     if (!response.ok) {
       throw new Error()
     }
-    alert('Ausschreibung erfolgreich aktualisiert!')
-    router.push('/ausschreibungen')
+    showUpdateSuccess.value = true
+
+setTimeout(() => {
+  showUpdateSuccess.value = false
+  router.push('/ausschreibungen')
+  }, 2000)
   }
   catch (error) {
     console.error(error)
-    alert('Ausschreibung konnte nicht aktualisiert werden.')
+   showUpdateError.value = true
+
+setTimeout(() => {
+  showUpdateError.value = false
+  }, 2000)
   }
 }
 
@@ -242,10 +252,19 @@ function cancelEdit() {
     </div>
   </form>
 </div>
-
 <Footer/>
-</template>
 
+<div
+  v-if="showUpdateSuccess"
+  class="success-popup">
+  Ausschreibung erfolgreich aktualisiert!
+</div>
+<div
+  v-if="showUpdateError"
+  class="error-popup">
+  Ausschreibung konnte nicht aktualisiert werden!
+</div>
+</template>
 <style scoped>
 .container {
   max-width: 500px;
@@ -272,6 +291,29 @@ function cancelEdit() {
     flex-direction: row;
     gap: 40px;
     justify-content: center;
+}
+
+.success-popup,
+.error-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 40px 70px;
+  border-radius: 25px;
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  z-index: 9999;
+  text-align: center;
+  min-width: 400px;
+}
+.success-popup {
+  background-color: #9BAF96;
+}
+.error-popup {
+  background-color: #D0A6A6;
 }
 
 </style>
