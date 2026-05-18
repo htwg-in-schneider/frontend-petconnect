@@ -10,35 +10,36 @@ const url = 'http://localhost:8081/api/ausschreibungen';
 import Button from '@/components/Button.vue'
 
 const ausschreibungen = ref([])
-const search = ref('')
-const filterAnimal = ref('')
-const filterCity = ref('')
+const search = ref('') /*suchleiste*/
+const filterAnimal = ref('') /*filter für tierart*/
 const filterCompensation = ref('')
+
+
 
 onMounted(async () => fetchAusschreibungen())
   
   const filteredAusschreibungen = computed(() => {
-
   return ausschreibungen.value.filter(a => {
 
+    const searchText = search.value.toLowerCase()
     const matchesSearch =
-      a.petName.toLowerCase().includes(search.value.toLowerCase()) ||
-      a.city.toLowerCase().includes(search.value.toLowerCase())
+      a.city.toLowerCase().includes(searchText) ||
+      a.animalType.toLowerCase().includes(searchText)
 
-    const matchesAnimal =
-      filterAnimal.value === '' || a.animalType === filterAnimal.value
+    const matchesAnimal = filterAnimal.value === '' ||
+      a.animalType === filterAnimal.value
 
-    const matchesCity =
-      filterCity.value === '' || a.city.toLowerCase().includes(filterCity.value.toLowerCase())
+    const matchesCompensation = filterCompensation.value === '' ||
+      a.compensation === filterCompensation.value
 
-    const matchesCompensation =
-      filterCompensation.value === '' || a.compensation === filterCompensation.value
-
-    return matchesSearch && matchesAnimal && matchesCity && matchesCompensation
-
+    return (
+      matchesSearch &&
+      matchesAnimal &&
+      matchesCompensation
+    )
   })
-
 })
+
 async function fetchAusschreibungen(){
 try {
     const response = await fetch(url)
@@ -61,9 +62,23 @@ try {
 
 <section class="container py-5">
 
-  <h1 class="text-center fw-bold mb-5">
-    Meine Ausschreibungen
-    <select v-model="filterAnimal" class="form-select mb-2">
+ <h1 class="text-center fw-bold mb-4">
+  Meine Ausschreibungen
+
+</h1>
+
+<div class="search-box mb-5">
+
+  <input
+    v-model="search"
+    class="form-control search-input"
+    placeholder="Suche nach Tierart oder Ort..."/>
+
+</div>
+<div class="filter-bar">
+<select
+    v-model="filterAnimal"
+    class="filter-item">
     <option value="">Alle Tiere</option>
     <option value="DOG">Hund</option>
     <option value="CAT">Katze</option>
@@ -71,33 +86,26 @@ try {
     <option value="BIRD">Vogel</option>
   </select>
 
-  <input
-    v-model="filterCity"
-    class="form-control mb-2"
-    placeholder="Ort filtern"/>
-
-  <select v-model="filterCompensation" class="form-select mb-2">
+  <select
+    v-model="filterCompensation"
+    class="filter-item">
     <option value="">Alle Vergütungen</option>
     <option value="Tausch">Tausch</option>
     <option value="Bezahlung">Bezahlung</option>
   </select>
-
-  </h1>
+</div>
 
   <div class="row g-5">
-
     <div
-      v-for="ausschreibung in filteredAusschreibungen"
+      v-for="ausschreibung in filteredAusschreibungen" 
       :key="ausschreibung.id"
       class="col-md-6">
 
     <AusschreibungCard
-        :ausschreibung="ausschreibung"
-      />
+    :ausschreibung="ausschreibung"/>
 
     </div>
-
-  </div>
+</div>
 
   <div class="button-group">
   <RouterLink to="/ausschreibung/create">
@@ -105,9 +113,7 @@ try {
       Neue Ausschreibung
     </Button>
   </RouterLink>
-
 </div>
-  
 
 </section>
 
@@ -121,6 +127,52 @@ try {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+.search-box {
+  display: flex;
+  justify-content: center;
+}
+
+.search-input { /* suchleiste*/
+  width: 100%;
+  max-width: 600px;
+  border-radius: 20px;
+  border: 4px solid #D0A6A6;
+  padding: 12px 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  transition: 0.2s;
+}
+.search-input:focus {  /* focus -> ändert farbe von rosa zu grün beim anklicken*/
+  outline: none;
+  border-color: #9BAF96;
+  box-shadow: 0 0 8px rgba(155,175,150,0.4);
+}
+
+/* Filterleiste so breit wie suchleiste gesamt */
+.filter-bar {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  max-width: 600px;
+  width: 100%;
+  margin: -10px auto 40px auto;
+}
+
+/* einzelne Filter */
+.filter-item {
+  flex: 1;
+  border-radius: 20px;
+  border: 4px solid #D0A6A6;
+  padding: 12px 15px;
+  background-color: white;
+  transition: 0.2s;
+}
+
+/* Fokus */
+.filter-item:focus {
+  outline: none;
+  border-color: #9BAF96;
+  box-shadow: 0 0 8px rgba(155,175,150,0.4);
 }
 
 </style>
