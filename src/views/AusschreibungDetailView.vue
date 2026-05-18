@@ -9,6 +9,7 @@ import {
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import Button from '@/components/Button.vue'
+import AusschreibungReview from '@/components/AusschreibungReview.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -166,6 +167,10 @@ async function deleteAusschreibung() {
 </Button>
   </div>
 </section>
+
+<AusschreibungReview :ausschreibungId="route.params.id"
+/>
+
 <Footer />
 
 <div
@@ -194,6 +199,8 @@ async function deleteAusschreibung() {
     </Button>
   </div>
 </div>
+
+
 
 </template>
 
