@@ -4,10 +4,15 @@ defineProps({
   ausschreibung: Object
 })
 
+function formatDate(dateString) {
+
+  return new Date(dateString)
+    .toLocaleDateString('de-DE')
+
+}
 </script>
 
 <template>
-
 <RouterLink
   :to="`/ausschreibung/${ausschreibung.id}`"
   class="card-link"
@@ -17,7 +22,8 @@ defineProps({
   <div class="image-wrapper">
 
     <img
-      :src="ausschreibung.imageUrl"
+      :src="ausschreibung.imageUrl ||
+    'https://placehold.co/600x400?text=Kein+Bild'"
       class="card-image"
       alt="Tierbild"
     >
@@ -37,12 +43,13 @@ defineProps({
 
     <p>
       <img src="../assets/images/Green_location_pin_icon.png" class="small-icon" alt="Standort">
+      {{ ausschreibung.postalCode }}
       {{ ausschreibung.city }}
     </p>
 
     <p>
       <img src="../assets/images/calendar_icon.png" class="small-icon" alt="Kalender">
-      {{ ausschreibung.dateFrom }} - {{ ausschreibung.dateTo }}
+      {{ formatDate(ausschreibung.dateFrom) }} - {{ formatDate(ausschreibung.dateTo) }}
     </p>
 
   </div>

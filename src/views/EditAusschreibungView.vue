@@ -14,13 +14,21 @@ const route = useRoute()
 const router = useRouter()
 
 const url ='http://localhost:8081/api/ausschreibungen'
+const animalTypeUrl ='http://localhost:8081/api/animaltype'
+
+const animalTypes = ref([])
+const translations = ref({})
 
 const ausschreibung = ref({})
 const showUpdateSuccess = ref(false)
 const showUpdateError = ref(false)
 
 onMounted(async () => {
-  await fetchAusschreibung()
+  await Promise.all([
+    fetchAusschreibung(),
+    fetchAnimalTypes(),
+    fetchTranslations()
+  ])
 })
 
 async function fetchAusschreibung() {
@@ -36,6 +44,28 @@ async function fetchAusschreibung() {
     console.error(error)
     alert('Ausschreibung konnte nicht geladen werden.')
     router.push('/ausschreibungen')
+  }
+}
+
+async function fetchAnimalTypes() {
+  try {
+    const response =await fetch(animalTypeUrl)
+    if (response.ok) {
+    animalTypes.value = await response.json()
+    }
+  }catch (error) {
+    console.error('Error fetching animal types:',error)
+  }
+}
+
+async function fetchTranslations() {
+  try {
+    const response = await fetch(`${animalTypeUrl}/translation`)
+    if (response.ok) {
+      translations.value = await response.json()
+    }
+  } catch (error) {
+    console.error('Error fetching translations:',error)
   }
 }
 
@@ -95,26 +125,23 @@ function cancelEdit() {
       <select
         class="form-select"
         v-model="ausschreibung.animalType"
+        required
       >
-        <option disabled value="">
-          Bitte wählen
-        </option>
+      <option
+        disabled
+        value=""
+      >
+      Bitte wählen
 
-        <option value="DOG">
-          Hund
-        </option>
+      </option>
 
-        <option value="CAT">
-          Katze
-        </option>
-
-        <option value="RABBIT">
-          Kaninchen
-        </option>
-
-        <option value="BIRD">
-          Vogel
-        </option>
+      <option
+        v-for="animal in animalTypes"
+        :key="animal"
+        :value="animal"
+      >
+        {{ translations[animal] || animal }}
+      </option>
       </select>
     </div>
 
@@ -174,6 +201,7 @@ function cancelEdit() {
         type="text"
         class="form-control"
         v-model="ausschreibung.city"
+        required
       >
     </div>
 
@@ -185,6 +213,7 @@ function cancelEdit() {
       <select
         class="form-select"
         v-model="ausschreibung.compensation"
+        required
       >
         <option value="Tausch">
           Tausch
@@ -226,6 +255,7 @@ function cancelEdit() {
           type="date"
           class="form-control"
           v-model="ausschreibung.dateFrom"
+          required
         >
       </div>
       <div class="col-6 mb-4">
@@ -236,6 +266,7 @@ function cancelEdit() {
           type="date"
           class="form-control"
           v-model="ausschreibung.dateTo"
+          required
         >
       </div>
     </div>

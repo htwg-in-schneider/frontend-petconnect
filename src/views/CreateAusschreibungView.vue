@@ -9,7 +9,10 @@ import Footer from '@/components/Footer.vue'
 const router = useRouter()
 
 const url = 'http://localhost:8081/api/ausschreibungen';
+const animalTypeUrl ='http://localhost:8081/api/animaltype'
 
+const animalTypes = ref([])
+const translations = ref({})
 const ausschreibung = ref({
 
   petName: '',
@@ -27,6 +30,15 @@ const ausschreibung = ref({
 
 const showSuccess = ref(false)
 const showError = ref(false)
+
+onMounted(async () => {
+
+  await Promise.all([
+    fetchAnimalTypes(),
+    fetchTranslations()
+  ])
+
+})
 
 async function createAusschreibung() {
 
@@ -66,6 +78,31 @@ async function createAusschreibung() {
   }
 }
 
+async function fetchAnimalTypes() {
+  try {
+    const response = await fetch(animalTypeUrl)
+    if (response.ok) {
+      animalTypes.value =await response.json()
+    }
+  }
+  catch (error) {
+    console.error('Error fetching animal types:',error)
+  }
+}
+
+async function fetchTranslations() {
+  try {
+    const response = await fetch(`${animalTypeUrl}/translation`)
+    if (response.ok) {
+      translations.value = await response.json()
+    }
+  }
+
+  catch (error) {
+    console.error('Error fetching translations:',error)
+  }
+}
+
 </script>
 
 <template>
@@ -88,26 +125,22 @@ async function createAusschreibung() {
       <select
         class="form-select"
         v-model="ausschreibung.animalType"
+        required
       >
-        <option disabled value="">
-          Bitte wählen
-        </option>
+      <option
+        disabled
+        value=""
+        >
+        Bitte wählen
+      </option>
 
-        <option value="DOG">
-          Hund
-        </option>
-
-        <option value="CAT">
-          Katze
-        </option>
-
-        <option value="RABBIT">
-          Kaninchen
-        </option>
-
-        <option value="BIRD">
-          Vogel
-        </option>
+      <option
+        v-for="animal in animalTypes"
+        :key="animal"
+        :value="animal"
+      >
+        {{ translations[animal] || animal }}
+      </option>
       </select>
     </div>
 
@@ -120,6 +153,7 @@ async function createAusschreibung() {
         type="text"
         class="form-control"
         v-model="ausschreibung.petName"
+        required
       >
     </div>
 
@@ -167,6 +201,7 @@ async function createAusschreibung() {
         type="text"
         class="form-control"
         v-model="ausschreibung.city"
+        required
       >
     </div>
 
@@ -178,6 +213,7 @@ async function createAusschreibung() {
       <select
         class="form-select"
         v-model="ausschreibung.compensation"
+        required
       >
         <option value="Tausch">
           Tausch
@@ -219,6 +255,7 @@ async function createAusschreibung() {
           type="date"
           class="form-control"
           v-model="ausschreibung.dateFrom"
+          required
         >
       </div>
       <div class="col-6 mb-4">
@@ -229,6 +266,7 @@ async function createAusschreibung() {
           type="date"
           class="form-control"
           v-model="ausschreibung.dateTo"
+          required
         >
       </div>
     </div>

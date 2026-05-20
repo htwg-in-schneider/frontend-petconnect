@@ -70,6 +70,13 @@ async function deleteAusschreibung() {
     )
   }
 }
+
+function formatDate(dateString) {
+
+  return new Date(dateString)
+    .toLocaleDateString('de-DE')
+
+}
 </script>
 
 <template>
@@ -114,8 +121,7 @@ async function deleteAusschreibung() {
       alt="Kalender"
     >
 
-    {{ ausschreibung.dateFrom }} - {{ ausschreibung.dateTo }}
-
+    {{ formatDate(ausschreibung.dateFrom) }} - {{ formatDate(ausschreibung.dateTo) }}
   </div>
 
   <div class="info-grid">

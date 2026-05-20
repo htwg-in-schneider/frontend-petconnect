@@ -56,6 +56,7 @@ async function fetchTranslations() {
     const searchText = search.value.toLowerCase()
     const matchesSearch =
       a.city.toLowerCase().includes(searchText) ||
+      a.postalCode.includes(searchText)||
       (translations.value[a.animalType] || '').toLowerCase().includes(searchText)
 
     const matchesAnimal = filterAnimal.value === '' ||
