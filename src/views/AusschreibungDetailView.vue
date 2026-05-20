@@ -14,10 +14,13 @@ import AusschreibungReview from '@/components/AusschreibungReview.vue'
 const route = useRoute()
 const router = useRouter()
 const ausschreibung = ref(null) // ref, damit es reaktiv ist
+const translations = ref({})
 
 const url = 'http://localhost:8081/api/ausschreibungen';
+const animalTypeUrl ='http://localhost:8081/api/animaltype'
 
 onMounted(async () => {
+  await fetchTranslations()
   try {
     const response = await fetch(`${url}/${route.params.id}`) //mit fetch die Daten abruft von derurl, bestimmtes product wird anhand der id geholt
     if (!response.ok) {
@@ -77,6 +80,17 @@ function formatDate(dateString) {
     .toLocaleDateString('de-DE')
 
 }
+
+async function fetchTranslations() {
+  try {
+    const response = await fetch( `${animalTypeUrl}/translation`)
+    if (response.ok) {
+      translations.value = await response.json()
+    }
+  }catch (error) {
+ console.error('Error fetching translations:',error)
+  }
+}
 </script>
 
 <template>
@@ -128,7 +142,9 @@ function formatDate(dateString) {
 
     <div class="info-box">
       <small>Tierart</small>
-      <p>{{ ausschreibung.animalType }}</p>
+      <p>{{translations[ausschreibung.animalType] ||
+          ausschreibung.animalType}}
+      </p>
     </div>
 
     <div class="info-box">
