@@ -3,6 +3,7 @@ import Footer from '@/components/Footer.vue';
 import Navbar from '@/components/Navbar.vue';
 import Button from '@/components/Button.vue';
 import SpecialBanner from '@/components/SpecialBanner.vue'
+
 </script>
 
 <template>
@@ -16,7 +17,7 @@ import SpecialBanner from '@/components/SpecialBanner.vue'
   <div class="container">
     <div class="row align-items-center"> <!--row → Zeile align-items-center → vertikal mittig-->
 
-      <!-- TEXT -->
+      
       <div class="col-lg-6 text-center text-lg-start"> 
         <!--col-lg-6        auf Desktop: 50% Breite auf Mobile: 100%
         text-center         Mobile
@@ -27,12 +28,17 @@ import SpecialBanner from '@/components/SpecialBanner.vue'
           Wir helfen dir, die perfekte Betreuung zu finden –
           schnell und unkompliziert.
         </p>
+
+        <div class="button-group">
         <router-link to="/ausschreibungen">
             <Button variant="accent">Ausschreibung hochladen</Button>
         </router-link>
-      </div>
 
-      
+        <router-link to="/registrieren">
+        <Button variant="accent">Registrieren</Button>
+        </router-link>
+        </div>
+        </div>
       <div class="col-lg-6 position-relative text-center mt-4 mt-lg-0">
 
         <div class="image-main">
@@ -153,3 +159,13 @@ import SpecialBanner from '@/components/SpecialBanner.vue'
 <Footer />
 
 </template>
+
+<style scoped>
+
+.button-group {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+</style>
