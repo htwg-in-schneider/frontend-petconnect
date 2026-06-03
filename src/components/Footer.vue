@@ -7,9 +7,10 @@ import FooterLink from '@/components/FooterLink.vue'
     <img src="../assets/images/logo.jpg" width="60" alt="PetConnectLogo">
 
      <p>
-    <FooterLink text="Impressum" label="Zum Impressum" href="#"/>
+     <router-link to="/impressum">Impressum</router-link>
+
     |
-    <FooterLink text="Datenschutz" label="Zum Datenschutz"href="#"/>
+    <router-link to="/datenschutz">Datenschutz</router-link>
     |
     <FooterLink text="Kontakt" label="Zur Kontaktseite" href="#"/>
   </p>
@@ -22,4 +23,20 @@ import FooterLink from '@/components/FooterLink.vue'
     background-color: #E8CFCF;
     font-weight: bold;
 }
+a{
+  color: black;
+
+}
+a:hover {
+  color: #9BAF96;
+}
+
+
+datenschutz{
+  color:black;
+}
+datenschutz:hover{
+   color: #9BAF96;
+}
+
 </style>

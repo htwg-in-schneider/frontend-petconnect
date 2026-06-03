@@ -33,7 +33,9 @@ import Button from '@/components/Button.vue'
                     </li>
 
                     <li class="nav-item">
+                    <router-link to="/anmelden">
                          <Button variant="secondary">Anmelden</Button>
+                         </router-link>
                     </li>
 
                     <li class="nav-item">

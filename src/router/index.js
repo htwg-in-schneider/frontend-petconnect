@@ -5,10 +5,12 @@ import AusschreibungenView from '../views/AusschreibungenView.vue'
 import AusschreibungDetailView from '../views/AusschreibungDetailView.vue'
 import CreateAusschreibungView from '../views/CreateAusschreibungView.vue'
 import EditAusschreibungView from '../views/EditAusschreibungView.vue'
-import RegistrierenView from '@/views/RegistrierenView.vue'
+import AnmeldenView from '@/views/AnmeldenView.vue'
+import ImpressumView from '@/views/ImpressumView.vue' 
+import DatenschutzView from '@/views/DatenschutzView.vue'
 
 const router = createRouter({
-  history: createWebHistory('/frontend-petconnect/'),
+  history: createWebHistory(),
 
   routes: [
     {
@@ -41,10 +43,18 @@ const router = createRouter({
       component: EditAusschreibungView,
     },
     {
-      path: '/registrieren',
-      name: 'registrieren',
-      component: RegistrierenView
+      path: '/anmelden',
+      name: 'anmelden',
+      component: AnmeldenView
     },
+    {
+      path: '/impressum',
+      component: ImpressumView
+    },
+    {
+      path: '/datenschutz',
+      component: DatenschutzView
+    }
   ],
 })
 

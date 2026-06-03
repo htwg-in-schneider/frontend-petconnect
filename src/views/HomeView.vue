@@ -34,9 +34,6 @@ import SpecialBanner from '@/components/SpecialBanner.vue'
             <Button variant="accent">Ausschreibung hochladen</Button>
         </router-link>
 
-        <router-link to="/registrieren">
-        <Button variant="accent">Registrieren</Button>
-        </router-link>
         </div>
         </div>
       <div class="col-lg-6 position-relative text-center mt-4 mt-lg-0">

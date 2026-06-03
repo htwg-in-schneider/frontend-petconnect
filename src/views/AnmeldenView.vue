@@ -10,7 +10,7 @@ import Footer from '@/components/Footer.vue'
 <section class="kontakt py-5">
 <div class="container">
 
-<h1>Kontaktformular</h1>
+<h1>Anmelden</h1>
 
 <form 
 action="mailto:deineemail@example.com"
@@ -25,28 +25,17 @@ placeholder="Email"
 required />
 
 <input 
-type="Passwort"
+type="password"
 name="Passwort"
 placeholder="Passwort"
 required />
 
-<input 
-type="Vorname"
-name="Vorname"
-placeholder="Vorname"
-required />
-
-<input 
-type="Nachname"
-name="Nachname"
-placeholder="Nachname"
-required />
 
 <button type="submit">
-Registrieren
+Anmelden
 </button>
-
 </form>
+
 </div>
   </section>
 
@@ -63,11 +52,17 @@ gap: 15px;
 max-width: 600px;
 }
 
-.kontaktformular input,
+.kontaktformular input{
+    padding:12px;
+    border-radius:8px;
+    border:1px solid #ccc;
+}
+
 .kontaktformular button {
 padding: 12px;
 border-radius: 8px;
-border: 1px solid #ccc;
+border: none;
+background-color: #7f927a
 }
 
 @media (max-width: 768px) {
@@ -75,6 +70,5 @@ border: 1px solid #ccc;
 .kontaktformular {
 width: 100%;
 }
-
 }
 </style>
