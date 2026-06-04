@@ -1,5 +1,6 @@
 <script setup>
 import Button from '@/components/Button.vue'
+import UserMenu from './UserMenu.vue'
 </script>
 
 <template>
@@ -33,14 +34,12 @@ import Button from '@/components/Button.vue'
                     </li>
 
                     <li class="nav-item">
-                    <router-link to="/anmelden">
-                         <Button variant="secondary">Anmelden</Button>
-                         </router-link>
+                        <div class="d-flex align-items-center ms-auto">
+                            <UserMenu />
+                        </div>
                     </li>
 
-                    <li class="nav-item">
-                        <Button variant="secondary">Registrieren</Button>
-                    </li>
+                    
                 </ul>
             </div>
         </div>
