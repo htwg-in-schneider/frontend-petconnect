@@ -3,7 +3,21 @@ import Footer from '@/components/Footer.vue';
 import Navbar from '@/components/Navbar.vue';
 import Button from '@/components/Button.vue';
 import SpecialBanner from '@/components/SpecialBanner.vue'
+import { useAuth0 } from '@auth0/auth0-vue'
+import router from '@/router'
 
+const {
+  isAuthenticated,
+  loginWithRedirect
+} = useAuth0()
+
+function handleUploadClick() {
+  if (isAuthenticated.value) {
+    router.push('/meine-ausschreibungen')
+  } else {
+    loginWithRedirect()
+  }
+}
 </script>
 
 <template>
@@ -30,10 +44,9 @@ import SpecialBanner from '@/components/SpecialBanner.vue'
         </p>
 
         <div class="button-group">
-        <router-link to="/ausschreibungen">
-            <Button variant="accent">Ausschreibung hochladen</Button>
-        </router-link>
-
+            <Button variant="accent" 
+            @click="handleUploadClick">
+            Ausschreibung hochladen</Button>
         </div>
         </div>
       <div class="col-lg-6 position-relative text-center mt-4 mt-lg-0">

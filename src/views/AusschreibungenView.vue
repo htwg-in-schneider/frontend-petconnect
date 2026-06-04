@@ -5,7 +5,6 @@ import { ref, onMounted, computed } from 'vue'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import AusschreibungCard from '@/components/AusschreibungCard.vue'
-import Button from '@/components/Button.vue'
 
 const url = 'http://localhost:8081/api/ausschreibungen';
 const animalTypeUrl = 'http://localhost:8081/api/animaltype'
@@ -96,7 +95,7 @@ try {
 <section class="container py-5">
 
  <h1 class="text-center fw-bold mb-4">
-  Meine Ausschreibungen
+  Ausschreibungen
 
 </h1>
 
@@ -145,7 +144,7 @@ Keine passenden Ausschreibungen gefunden.
     <div
       v-for="ausschreibung in filteredAusschreibungen" 
       :key="ausschreibung.id"
-      class="col-md-6">
+      class="col-lg-4 col-md-6">
 
     <AusschreibungCard
     :ausschreibung="ausschreibung"/>
@@ -153,13 +152,7 @@ Keine passenden Ausschreibungen gefunden.
     </div>
 </div>
 
-  <div class="button-group">
-  <RouterLink to="/ausschreibung/create">
-    <Button variant="accent">
-      Neue Ausschreibung
-    </Button>
-  </RouterLink>
-</div>
+  
 
 </section>
 
@@ -173,12 +166,6 @@ Keine passenden Ausschreibungen gefunden.
   margin: 50px;
   font-size: 1.3rem;
   color: #777;
-}
-.button-group {
-    margin-top: 40px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 }
 .search-box {
   display: flex;

@@ -1,6 +1,8 @@
 <script setup>
+import { useAuth0 } from '@auth0/auth0-vue'
 import Button from '@/components/Button.vue'
 import UserMenu from './UserMenu.vue'
+const { isAuthenticated } = useAuth0()
 </script>
 
 <template>
@@ -32,6 +34,12 @@ import UserMenu from './UserMenu.vue'
         
             <div class="offcanvas-body">
                 <ul class="navbar-nav ms-auto"> <!-- ms-auto hier fügt die "Right-Aligment" hinzu -->
+
+                    <li v-if="isAuthenticated" class="nav-item">
+                        <router-link to="/meine-ausschreibungen">
+                            <Button variant="secondary">Meine Ausschreibungen</Button>
+                        </router-link>
+                    </li>
 
                     <li class="nav-item">
                         <router-link to="/ausschreibungen">

@@ -9,6 +9,7 @@ import ProfileView from '@/views/ProfileView.vue'
 import { authGuard } from '@auth0/auth0-vue'
 import ImpressumView from '@/views/ImpressumView.vue' 
 import DatenschutzView from '@/views/DatenschutzView.vue'
+import MeineAusschreibungenView from '@/views/MeineAusschreibungenView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -24,6 +25,12 @@ const router = createRouter({
       path: '/ausschreibungen',
       name: 'ausschreibungen',
       component: AusschreibungenView,
+    },
+
+     {
+      path: '/meine-ausschreibungen',
+      name: 'meine-ausschreibungen',
+      component: MeineAusschreibungenView,
     },
 
     {
