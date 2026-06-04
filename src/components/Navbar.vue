@@ -8,11 +8,21 @@ import UserMenu from './UserMenu.vue'
     <div class="container">
         <img src="../assets/images/logo.jpg" width="60" class="me-2" alt="PetConnectLogo"> 
         <a class="navbar-brand" href="#">PetConnect</a>
-       
-        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarOffcanvasLg" aria-controls="navbarOffcanvasLg" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+
+        <div class="d-flex align-items-center order-lg-last">
+            <UserMenu class="ms-2 me-2 me-lg-0" />
+            <button
+            class="navbar-toggler ms-2"
+            type="button"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#navbarOffcanvasLg"
+            aria-controls="navbarOffcanvasLg"
+            >
+        <span class="navbar-toggler-icon"></span>
         </button>
 
+        </div>
+       
         <div class="offcanvas offcanvas-end" tabindex="-1" id="navbarOffcanvasLg">
             <div class="offcanvas-header">
                 <h5 id="navbarOffcanvasLgLabel">PetConnect</h5>
@@ -32,14 +42,7 @@ import UserMenu from './UserMenu.vue'
                     <li class="nav-item">
                         <Button variant="secondary">Über uns</Button>
                     </li>
-
-                    <li class="nav-item">
-                        <div class="d-flex align-items-center ms-auto">
-                            <UserMenu />
-                        </div>
-                    </li>
-
-                    
+  
                 </ul>
             </div>
         </div>
@@ -78,5 +81,11 @@ import UserMenu from './UserMenu.vue'
     display: flex;
     justify-content: flex-start; /* oben */
     align-items: flex-start;     /* links */
+}
+
+@media (min-width: 992px) {
+  .nav-item {
+    margin-bottom: 0;
+  }
 }
 </style>
