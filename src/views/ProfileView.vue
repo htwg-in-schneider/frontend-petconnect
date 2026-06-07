@@ -18,6 +18,8 @@ const {
 const profileData = ref(null)
 const bearerToken = ref('')
 const error = ref('')
+const showSaveSuccess = ref(false)
+const showSaveError = ref(false)
 
 function copyToClipboard(event) {
   event.target.select()
@@ -37,6 +39,37 @@ function getRoleName(role) {
 
     default:
       return role
+  }
+}
+
+async function saveProfile() {
+  try {
+    const token =
+      await getAccessTokenSilently()
+    const response = await fetch(
+      `${baseUrl}/api/profile`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(profileData.value)
+      }
+    )
+    if (!response.ok) {
+      throw new Error()
+    }
+    showSaveSuccess.value = true
+    setTimeout(() => {
+      showSaveSuccess.value = false
+    }, 2000)
+  } catch (error) {
+     showSaveError.value = true
+
+    setTimeout(() => {
+      showSaveError.value = false
+    }, 2000)
   }
 }
 
@@ -112,11 +145,35 @@ onMounted(async () => {
   {{ profileData.email }}
 </p>
 
-        <p>
-          <strong>Rolle:</strong>
-          {{ getRoleName(profileData.role) }}
-        </p>
+  <p>
+    <strong>Rolle:</strong>
+    {{ getRoleName(profileData.role) }}
+  </p>
 
+  <div class="profile-form">
+    <label>Vorname</label>
+    <input
+      class="form-control"
+      v-model="profileData.firstName"
+    >
+    <label>Nachname</label>
+    <input
+      class="form-control"
+      v-model="profileData.lastName"
+    >
+    <label>Adresse</label>
+    <input
+      class="form-control"
+      v-model="profileData.address"
+    >
+
+    <button
+      class="btn save-btn mt-4"
+      @click="saveProfile"
+    >
+    Änderungen speichern
+    </button>
+  </div>
         <div class="mt-4 text-start">
 
           <details>
@@ -174,6 +231,20 @@ onMounted(async () => {
 
   </div>
 
+  <div
+  v-if="showSaveSuccess"
+  class="success-popup"
+>
+  Profil erfolgreich gespeichert!
+</div>
+
+<div
+  v-if="showSaveError"
+  class="error-popup"
+>
+  Fehler beim Speichern!
+</div>
+
 </div>
 
 <Footer />
@@ -204,5 +275,49 @@ onMounted(async () => {
   color: #666;
   font-size: 1.05rem;
   margin-bottom: 20px;
+}
+.profile-form {
+  max-width: 450px;
+  margin: 30px auto 0 auto;
+  text-align: left;
+}
+
+.profile-form label {
+  font-weight: 600;
+  margin-top: 15px;
+  margin-bottom: 5px;
+}
+
+.profile-form .form-control {
+  border: 2px solid #D0A6A6;
+  border-radius: 10px;
+}
+
+.save-btn {
+  background-color: #9BAF96;
+  color: white;
+  width: 100%;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.save-btn:hover {
+  background-color: #889d83;
+}
+.success-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 40px 70px;
+  border-radius: 25px;
+  font-size: 2rem;
+  font-weight: bold;
+  color: white;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  z-index: 9999;
+  text-align: center;
+  min-width: 400px;
+  background-color: #9BAF96;
 }
 </style>
