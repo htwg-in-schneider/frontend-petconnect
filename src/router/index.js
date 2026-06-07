@@ -10,6 +10,7 @@ import { authGuard } from '@auth0/auth0-vue'
 import ImpressumView from '@/views/ImpressumView.vue' 
 import DatenschutzView from '@/views/DatenschutzView.vue'
 import MeineAusschreibungenView from '@/views/MeineAusschreibungenView.vue'
+import AdminView from '@/views/AdminView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -72,6 +73,12 @@ const router = createRouter({
     {
       path: '/datenschutz',
       component: DatenschutzView
+    },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: AdminView,
+      beforeEnter: authGuard
     }
   ],
 })

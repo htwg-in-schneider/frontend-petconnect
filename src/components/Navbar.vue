@@ -67,6 +67,16 @@ watch(isAuthenticated, () => {
             <div class="offcanvas-body">
                 <ul class="navbar-nav ms-auto"> <!-- ms-auto hier fügt die "Right-Aligment" hinzu -->
 
+                    <li
+                    v-if="role === 'ADMIN'"
+                    class="nav-item"
+                    >
+                        <RouterLink to="/admin">
+                            <Button variant="secondary">
+                                Admin
+                            </Button>
+                        </RouterLink>
+                    </li>
 
                     <router-link
                     v-if="role === 'TIERBESITZER' || role === 'ADMIN'"
