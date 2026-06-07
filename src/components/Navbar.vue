@@ -1,8 +1,40 @@
 <script setup>
+import { ref, onMounted, watch } from 'vue'
 import { useAuth0 } from '@auth0/auth0-vue'
 import Button from '@/components/Button.vue'
 import UserMenu from './UserMenu.vue'
-const { isAuthenticated } = useAuth0()
+
+const { isAuthenticated, getAccessTokenSilently } = useAuth0()
+const role = ref(null)
+
+async function loadRole() {
+  if (!isAuthenticated.value) {
+    role.value = null
+    return
+  }
+  try {
+    const token = await getAccessTokenSilently()
+    const response = await fetch(
+      'http://localhost:8081/api/profile',
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+    if (response.ok) {
+      const user = await response.json()
+      role.value = user.role
+    }
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+onMounted(loadRole)
+watch(isAuthenticated, () => {
+  loadRole()
+})
 </script>
 
 <template>
@@ -35,11 +67,16 @@ const { isAuthenticated } = useAuth0()
             <div class="offcanvas-body">
                 <ul class="navbar-nav ms-auto"> <!-- ms-auto hier fügt die "Right-Aligment" hinzu -->
 
-                    <li v-if="isAuthenticated" class="nav-item">
-                        <router-link to="/meine-ausschreibungen">
-                            <Button variant="secondary">Meine Ausschreibungen</Button>
-                        </router-link>
-                    </li>
+
+                    <router-link
+                    v-if="role === 'TIERBESITZER' || role === 'ADMIN'"
+                    to="/meine-ausschreibungen"
+                    class="nav-item"
+                    >
+                        <Button variant="secondary">
+                        Meine Ausschreibungen
+                        </Button>
+                    </router-link>
 
                     <li class="nav-item">
                         <router-link to="/ausschreibungen">

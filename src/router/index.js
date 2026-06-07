@@ -31,6 +31,7 @@ const router = createRouter({
       path: '/meine-ausschreibungen',
       name: 'meine-ausschreibungen',
       component: MeineAusschreibungenView,
+      beforeEnter: authGuard
     },
 
     {

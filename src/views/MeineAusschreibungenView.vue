@@ -1,15 +1,20 @@
 <script setup>
 
 import { ref, onMounted} from 'vue'
+import { useAuth0 } from '@auth0/auth0-vue'
 
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import AusschreibungCard from '@/components/AusschreibungCard.vue'
 import Button from '@/components/Button.vue'
 
-const url = 'http://localhost:8081/api/ausschreibungen';
-
+const url = 'http://localhost:8081/api/ausschreibungen/meine';
 const ausschreibungen = ref([])
+const role = ref(null)
+
+const {
+  getAccessTokenSilently
+} = useAuth0()
 
 onMounted(async () => {
  await Promise.all([
@@ -18,17 +23,44 @@ onMounted(async () => {
 })
 
 
-async function fetchAusschreibungen(){
-try {
-    const response = await fetch(url)
+async function fetchAusschreibungen() {
+  try {
+
+    const token = await getAccessTokenSilently()
+
+    const profileResponse = await fetch(
+      'http://localhost:8081/api/profile',
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+
+    if (profileResponse.ok) {
+      const profile = await profileResponse.json()
+      role.value = profile.role
+    }
+
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+
     if (!response.ok) {
       throw new Error(
-        `HTTP error! status: ${response.status}`)}
+        `HTTP error! status: ${response.status}`
+      )
+    }
 
     ausschreibungen.value = await response.json()
-    console.log(ausschreibungen.value)
+
   } catch (error) {
-    console.error('Error fetching ausschreibungen:',error)
+    console.error(
+      'Error fetching ausschreibungen:',
+      error
+    )
   }
 }
 
@@ -65,7 +97,7 @@ try {
 </div>
 
   <div class="button-group">
-  <RouterLink to="/ausschreibung/create">
+  <RouterLink v-if="role === 'TIERBESITZER'"to="/ausschreibung/create">
     <Button variant="accent">
       Neue Ausschreibung
     </Button>

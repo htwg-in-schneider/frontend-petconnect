@@ -10,16 +10,22 @@ import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import Button from '@/components/Button.vue'
 import AusschreibungReview from '@/components/AusschreibungReview.vue'
+import { useAuth0 } from '@auth0/auth0-vue'
 
 const route = useRoute()
 const router = useRouter()
 const ausschreibung = ref(null) // ref, damit es reaktiv ist
 const translations = ref({})
+const { isAuthenticated, getAccessTokenSilently } = useAuth0()
+
+const role = ref(null)
+const isTierbesitzer = ref(false)
 
 const url = 'http://localhost:8081/api/ausschreibungen';
 const animalTypeUrl ='http://localhost:8081/api/animaltype'
 
 onMounted(async () => {
+  await loadRole()
   await fetchTranslations()
   try {
     const response = await fetch(`${url}/${route.params.id}`) //mit fetch die Daten abruft von derurl, bestimmtes product wird anhand der id geholt
@@ -51,12 +57,16 @@ function cancelDelete() {
 async function deleteAusschreibung() {
   showConfirmDelete.value = false
   try {
+    const token = await getAccessTokenSilently()
     const response = await fetch(
-    `${url}/${ausschreibung.value.id}`,
-    {
-    method: 'DELETE'
-      }
-    )
+  `${url}/${ausschreibung.value.id}`,
+  {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  }
+)
     if (!response.ok) {
     throw new Error()
     }
@@ -89,6 +99,31 @@ async function fetchTranslations() {
     }
   }catch (error) {
  console.error('Error fetching translations:',error)
+  }
+}
+
+async function loadRole() {
+  if (!isAuthenticated.value) {
+    return
+  }
+  try {
+    const token = await getAccessTokenSilently()
+    const response = await fetch(
+      'http://localhost:8081/api/profile',
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+    if (response.ok) {
+      const user = await response.json()
+      role.value = user.role
+      isTierbesitzer.value =
+        user.role === 'TIERBESITZER'
+    }
+  } catch (error) {
+    console.error(error)
   }
 }
 </script>
@@ -174,7 +209,7 @@ async function fetchTranslations() {
 
   </div>
 
-  <div class="button-group">
+  <div v-if="isTierbesitzer" class="button-group">
     <RouterLink
     :to="`/ausschreibung/edit/${ausschreibung.id}`">
     <Button variant="accent">
