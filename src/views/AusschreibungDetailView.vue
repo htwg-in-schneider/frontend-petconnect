@@ -19,7 +19,7 @@ const translations = ref({})
 const { isAuthenticated, getAccessTokenSilently } = useAuth0()
 
 const role = ref(null)
-const isTierbesitzer = ref(false)
+const canEdit = ref(false)
 
 const url = 'http://localhost:8081/api/ausschreibungen';
 const animalTypeUrl ='http://localhost:8081/api/animaltype'
@@ -119,8 +119,8 @@ async function loadRole() {
     if (response.ok) {
       const user = await response.json()
       role.value = user.role
-      isTierbesitzer.value =
-        user.role === 'TIERBESITZER'
+      canEdit.value = user.role === 'TIERBESITZER'
+      || user.role === 'ADMIN'
     }
   } catch (error) {
     console.error(error)
@@ -209,7 +209,7 @@ async function loadRole() {
 
   </div>
 
-  <div v-if="isTierbesitzer" class="button-group">
+  <div v-if="canEdit" class="button-group">
     <RouterLink
     :to="`/ausschreibung/edit/${ausschreibung.id}`">
     <Button variant="accent">

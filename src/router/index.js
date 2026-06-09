@@ -11,6 +11,7 @@ import ImpressumView from '@/views/ImpressumView.vue'
 import DatenschutzView from '@/views/DatenschutzView.vue'
 import MeineAusschreibungenView from '@/views/MeineAusschreibungenView.vue'
 import AdminView from '@/views/AdminView.vue'
+import AdminAusschreibungenView from '@/views/AdminAusschreibungenView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -78,6 +79,12 @@ const router = createRouter({
       path: '/admin',
       name: 'admin',
       component: AdminView,
+      beforeEnter: authGuard
+    },
+    {
+      path: '/admin/ausschreibungen',
+      name: 'admin-ausschreibungen',
+      component: AdminAusschreibungenView,
       beforeEnter: authGuard
     }
   ],

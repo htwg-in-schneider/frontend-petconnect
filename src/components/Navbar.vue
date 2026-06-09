@@ -73,25 +73,43 @@ watch(isAuthenticated, () => {
                     >
                         <RouterLink to="/admin">
                             <Button variant="secondary">
-                                Admin
+                                Benutzerverwaltung
                             </Button>
                         </RouterLink>
                     </li>
 
-                    <router-link
-                    v-if="role === 'TIERBESITZER' || role === 'ADMIN'"
-                    to="/meine-ausschreibungen"
+                    <li
+                    v-if="role === 'ADMIN'"
                     class="nav-item"
                     >
-                        <Button variant="secondary">
-                        Meine Ausschreibungen
-                        </Button>
-                    </router-link>
+                        <RouterLink to="/admin/ausschreibungen">
+                            <Button variant="secondary">
+                                Ausschreibungen verwalten
+                            </Button>
+                        </RouterLink>
+                    </li>
 
-                    <li class="nav-item">
-                        <router-link to="/ausschreibungen">
-                            <Button variant="secondary">Ausschreibungen</Button>
-                        </router-link>
+                    <li
+                    v-if="role === 'TIERBESITZER'"
+                    class="nav-item"
+                    >
+                        <RouterLink to="/meine-ausschreibungen">
+                            <Button variant="secondary">
+                                Meine Ausschreibungen
+                            </Button>
+                        </RouterLink>
+                    </li>
+
+
+                    <li 
+                    v-if="role === 'TIERBESITZER' || 'TIERSUCHER'"
+                    class="nav-item" 
+                    >
+                        <RouterLink to="/ausschreibungen">
+                            <Button variant="secondary">
+                                Ausschreibungen
+                            </Button>
+                        </RouterLink>
                     </li>
 
                     <li class="nav-item">

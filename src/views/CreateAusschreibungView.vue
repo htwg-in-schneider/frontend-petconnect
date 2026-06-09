@@ -5,8 +5,10 @@ import { useRouter } from 'vue-router';
 import Button from '@/components/Button.vue'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
+import { useAuth0 } from '@auth0/auth0-vue'
 
 const router = useRouter()
+const { getAccessTokenSilently } = useAuth0()
 
 const url = 'http://localhost:8081/api/ausschreibungen';
 const animalTypeUrl ='http://localhost:8081/api/animaltype'
@@ -43,16 +45,19 @@ onMounted(async () => {
 async function createAusschreibung() {
 
   try {
+    const token = await getAccessTokenSilently()
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
       },
 
       body: JSON.stringify(ausschreibung.value)
     })
 
     if (!response.ok) {
+      console.log('Backend Antwort:',response.status)
       throw new Error(
         `Fehler beim Erstellen: ${response.status}`
       )
