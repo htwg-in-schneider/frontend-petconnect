@@ -1,11 +1,13 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import Button from '@/components/Button.vue'
+import SearchBar from '@/components/SearchBar.vue'
 
 const ausschreibungen = ref([])
+const search = ref('')
 
 async function fetchAusschreibungen() {
   const response = await fetch(
@@ -13,6 +15,19 @@ async function fetchAusschreibungen() {
   )
   ausschreibungen.value =await response.json()
 }
+const filteredAusschreibungen = computed(() => {
+  return ausschreibungen.value.filter(a => {
+    const searchText = search.value.toLowerCase()
+    const ownerName =
+      `${a.owner?.firstName || ''} ${a.owner?.lastName || ''}`
+      .toLowerCase()
+    return (
+      ownerName.includes(searchText)
+      ||
+      a.petName.toLowerCase().includes(searchText)
+    )
+  })
+})
 
 onMounted(() => {
   fetchAusschreibungen()
@@ -23,6 +38,19 @@ onMounted(() => {
 <Navbar />
 <div class="container py-5">
     <h1>Ausschreibungen verwalten</h1>
+
+    <SearchBar
+    v-model="search"
+    placeholder="Nach Besitzer oder Tiername suchen..."
+    />
+
+    <div
+    v-if="filteredAusschreibungen.length === 0"
+    class="no-results"
+    >
+    Keine passenden Ausschreibungen gefunden.
+    </div>
+
     <table class="table">
     <thead>
     <tr>
@@ -34,7 +62,7 @@ onMounted(() => {
     </thead>
     <tbody>
         <tr
-        v-for="a in ausschreibungen"
+        v-for="a in filteredAusschreibungen"
         :key="a.id"
         >
         <td data-label="Tier">

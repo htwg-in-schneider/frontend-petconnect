@@ -4,6 +4,7 @@ import { ref, onMounted, computed } from 'vue'
 
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
+import SearchBar from '@/components/SearchBar.vue'
 import AusschreibungCard from '@/components/AusschreibungCard.vue'
 
 const url = 'http://localhost:8081/api/ausschreibungen';
@@ -101,10 +102,10 @@ try {
 
 <div class="search-box mb-5">
 
-  <input
-    v-model="search"
-    class="form-control search-input"
-    placeholder="Suche nach Tierart oder Ort..."/>
+ <SearchBar
+  v-model="search"
+  placeholder="Suche nach Tierart oder Ort..."
+/>
 
 </div>
 <div class="filter-bar">
@@ -161,32 +162,6 @@ Keine passenden Ausschreibungen gefunden.
 </template>
 
 <style scoped>
-.no-results {
-  text-align: center;
-  margin: 50px;
-  font-size: 1.3rem;
-  color: #777;
-}
-.search-box {
-  display: flex;
-  justify-content: center;
-}
-
-.search-input { /* suchleiste*/
-  width: 100%;
-  max-width: 600px;
-  border-radius: 20px;
-  border: 2px solid #D0A6A6;
-  padding: 12px 20px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-  transition: 0.2s;
-}
-.search-input:focus {  /* focus -> ändert farbe von rosa zu grün beim anklicken*/
-  outline: none;
-  border-color: #9BAF96;
-  box-shadow: 0 0 8px rgba(155,175,150,0.4);
-}
-
 /* Filterleiste so breit wie suchleiste gesamt */
 .filter-bar {
   display: flex;
@@ -221,10 +196,6 @@ Keine passenden Ausschreibungen gefunden.
   }
 
   .filter-item {
-    width: 100%;
-  }
-
-  .search-input {
     width: 100%;
   }
 }

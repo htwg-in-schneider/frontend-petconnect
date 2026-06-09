@@ -2,6 +2,7 @@
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import Button from '@/components/Button.vue'
+import SearchBar from '@/components/SearchBar.vue'
 import { ref, computed, onMounted } from 'vue'
 import { useAuth0 } from '@auth0/auth0-vue'
 
@@ -13,13 +14,24 @@ const { getAccessTokenSilently } = useAuth0()
 
 
 async function fetchUsers() {
+  const token =
+    await getAccessTokenSilently()
   const response =
     await fetch(
-      'http://localhost:8081/api/users'
+      'http://localhost:8081/api/users',
+      {
+      headers: {
+        Authorization:
+          `Bearer ${token}`
+      }
+    }
     )
-  users.value =
-    await response.json()
+    if (!response.ok) {
+    throw new Error(`HTTP Error ${response.status}`)
+    }
+  users.value = await response.json()
 }
+
 function editUser(user) {
   selectedUser.value = { ...user }
   showEditPopup.value = true
@@ -73,13 +85,10 @@ const response = await fetch(
   </div>
 
   
-<div class="search-box mb-5">
-  <input
-    v-model="search"
-    class="form-control search-input"
-    placeholder="Nach Name oder E-Mail suchen..."
-/>
-</div>
+  <SearchBar
+  v-model="search"
+  placeholder="Nach Name oder E-Mail suchen..."
+  />
 
 <div
   v-if="filteredUsers.length === 0"
@@ -172,31 +181,6 @@ Keine passenden Accounts gefunden.
 </template>
 
 <style scoped>
-.no-results {
-  text-align: center;
-  margin: 50px;
-  font-size: 1.3rem;
-  color: #777;
-}
-.search-box {
-  display: flex;
-  justify-content: center;
-}
-
-.search-input { /* suchleiste*/
-  width: 100%;
-  max-width: 600px;
-  border-radius: 20px;
-  border: 2px solid #D0A6A6;
-  padding: 12px 20px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-  transition: 0.2s;
-}
-.search-input:focus {  /* focus -> ändert farbe von rosa zu grün beim anklicken*/
-  outline: none;
-  border-color: #9BAF96;
-  box-shadow: 0 0 8px rgba(155,175,150,0.4);
-}
 .confirm-popup {
   position: fixed;
   top: 50%;
