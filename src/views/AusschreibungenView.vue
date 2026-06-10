@@ -100,14 +100,11 @@ try {
 
 </h1>
 
-<div class="search-box mb-5">
-
  <SearchBar
   v-model="search"
   placeholder="Suche nach Tierart oder Ort..."
 />
 
-</div>
 <div class="filter-bar">
   <select
     v-model="filterAnimal"

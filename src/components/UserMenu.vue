@@ -15,8 +15,13 @@ const {
 
 const handleLogin = () => {
   console.log('Login geklickt')
-  loginWithRedirect()
+  loginWithRedirect({
+    authorizationParams: {
+      prompt: "consent"
+    }
+  })
 }
+
 
 const handleLogout = () => {
   logout({

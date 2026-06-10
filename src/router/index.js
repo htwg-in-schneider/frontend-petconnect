@@ -12,6 +12,7 @@ import DatenschutzView from '@/views/DatenschutzView.vue'
 import MeineAusschreibungenView from '@/views/MeineAusschreibungenView.vue'
 import AdminView from '@/views/AdminView.vue'
 import AdminAusschreibungenView from '@/views/AdminAusschreibungenView.vue'
+import AdminMeldungenView from '@/views/AdminMeldungenView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -86,7 +87,13 @@ const router = createRouter({
       name: 'admin-ausschreibungen',
       component: AdminAusschreibungenView,
       beforeEnter: authGuard
-    }
+    },
+    {
+      path: '/admin/meldungen',
+      name: 'admin-meldungen',
+      component: AdminMeldungenView,
+      beforeEnter: authGuard
+      }
   ],
 })
 

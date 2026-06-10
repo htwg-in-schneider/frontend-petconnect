@@ -14,6 +14,14 @@ const auth0 = createAuth0({
   }
 })
 
+router.afterEach(() => {
+  document.body.style.overflow = ''
+
+  document
+    .querySelectorAll('.offcanvas-backdrop')
+    .forEach(el => el.remove())
+})
+
 const app = createApp(App)
 const pinia = createPinia()
 

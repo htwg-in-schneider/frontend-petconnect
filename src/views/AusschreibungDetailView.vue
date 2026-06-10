@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import {
   useRoute,
   useRouter
@@ -14,12 +14,17 @@ import { useAuth0 } from '@auth0/auth0-vue'
 
 const route = useRoute()
 const router = useRouter()
-const ausschreibung = ref(null) // ref, damit es reaktiv ist
+const ausschreibung = ref(null) 
 const translations = ref({})
 const { isAuthenticated, getAccessTokenSilently } = useAuth0()
+const showReportPopup = ref(false)
 
+const report = ref({
+  grund: '',
+  beschreibung: ''
+})
 const role = ref(null)
-const canEdit = ref(false)
+const currentUserId = ref(null)
 
 const url = 'http://localhost:8081/api/ausschreibungen';
 const animalTypeUrl ='http://localhost:8081/api/animaltype'
@@ -40,8 +45,18 @@ onMounted(async () => {
   }
 })
 
+const canEdit = computed(() => {
+  if (!ausschreibung.value) {
+    return false
+  }
+  if (role.value === 'ADMIN') {
+    return true
+  }
+  return ausschreibung.value.owner?.id === currentUserId.value
+})
 
-  const showDeleteSuccess = ref(false)
+
+const showDeleteSuccess = ref(false)
 const showConfirmDelete = ref(false)
 
 function askDeleteConfirmation() {
@@ -88,8 +103,41 @@ function formatDate(dateString) {
 
   return new Date(dateString)
     .toLocaleDateString('de-DE')
-
 }
+  
+async function sendReport() {
+  try {
+    const token = await getAccessTokenSilently()
+
+    console.log("Owner:", ausschreibung.value.owner)
+
+    const response = await fetch(
+      `http://localhost:8081/api/meldungen/${ausschreibung.value.owner.id}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(report.value)
+      }
+    )
+
+    console.log("Status:", response.status)
+
+    if (!response.ok) {
+      const text = await response.text()
+      console.log(text)
+    }
+
+    showReportPopup.value = false
+
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+
 
 async function fetchTranslations() {
   try {
@@ -117,11 +165,11 @@ async function loadRole() {
       }
     )
     if (response.ok) {
-      const user = await response.json()
-      role.value = user.role
-      canEdit.value = user.role === 'TIERBESITZER'
-      || user.role === 'ADMIN'
-    }
+  const user = await response.json()
+
+  role.value = user.role
+  currentUserId.value = user.id
+}
   } catch (error) {
     console.error(error)
   }
@@ -200,14 +248,33 @@ async function loadRole() {
   </div>
 
   <div class="description-box">
-
     <small>Beschreibung</small>
-
     <p>
       {{ ausschreibung.description }}
     </p>
-
   </div>
+
+  <div class="description-box">
+  <small>Besitzer</small>
+  <p>
+    {{ ausschreibung.owner?.firstName }}
+    {{ ausschreibung.owner?.lastName }}
+  </p>
+</div>
+
+<div
+  v-if="
+    isAuthenticated && !canEdit
+  "
+  class="button-group"
+>
+  <Button
+    variant="secondary"
+    @click="showReportPopup = true"
+  >
+    Benutzer melden
+  </Button>
+</div>
 
   <div v-if="canEdit" class="button-group">
     <RouterLink
@@ -254,6 +321,52 @@ async function loadRole() {
       @click="cancelDelete">
     Nein
     </Button>
+  </div>
+</div>
+
+<!-- Account melden -->
+<div
+  v-if="showReportPopup"
+  class="confirm-popup"
+>
+  <h3>Benutzer melden</h3>
+  <select
+    v-model="report.grund"
+    class="form-control mb-3"
+  >
+    <option value="">
+      Bitte wählen
+    </option>
+    <option value="Unangemessener Inhalt">
+      Unangemessener Inhalt
+    </option>
+    <option value="Spam">
+      Spam
+    </option>
+    <option value="Beleidigung">
+      Beleidigung
+    </option>
+  </select>
+  <textarea
+    v-model="report.beschreibung"
+    class="form-control mb-3"
+    placeholder="Beschreibung"
+  />
+
+  <div class="confirm-buttons">
+    <Button
+      variant="accent"
+      @click="sendReport"
+    >
+      Melden
+    </Button>
+    <Button
+      variant="secondary"
+      @click="showReportPopup = false"
+    >
+      Abbrechen
+    </Button>
+
   </div>
 </div>
 

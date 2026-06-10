@@ -90,11 +90,23 @@ watch(isAuthenticated, () => {
                     </li>
 
                     <li
+                    v-if="role === 'ADMIN'"
+                    class="nav-item"
+                    >
+                        <RouterLink to="/admin/meldungen">
+                            <Button variant="secondary">
+                                Gemeldete Profile
+                            </Button>
+                        </RouterLink>
+                    </li>
+
+                    <li
                     v-if="role === 'TIERBESITZER'"
                     class="nav-item"
                     >
                         <RouterLink to="/meine-ausschreibungen">
-                            <Button variant="secondary">
+                            <Button variant="secondary"
+                            >
                                 Meine Ausschreibungen
                             </Button>
                         </RouterLink>
@@ -102,7 +114,7 @@ watch(isAuthenticated, () => {
 
 
                     <li 
-                    v-if="role === 'TIERBESITZER' || 'TIERSUCHER'"
+                    v-if="role === 'TIERBESITZER' || role==='TIERSUCHER'"
                     class="nav-item" 
                     >
                         <RouterLink to="/ausschreibungen">
