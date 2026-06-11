@@ -35,6 +35,7 @@ watch(() => props.ausschreibungId,() => {
     fetchReviews()
   }
 )
+
 </script>
 
 <template>
@@ -75,6 +76,7 @@ watch(() => props.ausschreibungId,() => {
   >
     Noch keine Bewertungen vorhanden.
   </div>
+
 </div>
 </template>
 
@@ -86,18 +88,15 @@ watch(() => props.ausschreibungId,() => {
   background-color: white;
   margin-bottom: 50px;
 }
-
 .review-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
 }
-
 .review-text {
   margin: 0;
 }
-
 .stars {
   color: #e8c547;
   font-weight: bold;
