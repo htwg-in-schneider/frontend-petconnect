@@ -254,12 +254,36 @@ async function loadRole() {
     </p>
   </div>
 
-  <div class="description-box">
-  <small>Besitzer</small>
-  <p>
-    {{ ausschreibung.owner?.firstName }}
-    {{ ausschreibung.owner?.lastName }}
-  </p>
+  
+<div v-if="
+    isAuthenticated && !canEdit
+  "class="owner-card">
+
+  <h3>Tierbesitzer/-in</h3>
+
+  <div class="owner-info">
+    <img
+      src="../assets/images/User_Icon_Green.png"
+      class="owner-avatar"
+      alt="Profilbild"
+    >
+
+    <div>
+      <div class="owner-name">
+        {{ ausschreibung.owner?.firstName }}
+      </div>
+    </div>
+
+  </div>
+
+ <RouterLink
+  :to="`/chat/${ausschreibung.owner.id}/${ausschreibung.id}`"
+>
+    <Button variant="accent">
+      Nachricht
+    </Button>
+  </RouterLink>
+
 </div>
 
 <div
@@ -466,6 +490,37 @@ font-size: 1.5rem;
 display: flex;
 justify-content: center;
 gap: 20px;
+}
+
+.owner-card {
+  border: 2px solid #D0A6A6;
+  border-radius: 30px;
+  padding: 40px;
+  margin-top: 30px;
+}
+
+.owner-info {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  margin: 30px 0;
+}
+
+.owner-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.owner-name {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.message-link {
+  display: block;
+  width: 250px;
 }
 
 </style>

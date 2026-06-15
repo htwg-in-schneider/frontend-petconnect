@@ -13,6 +13,7 @@ import MeineAusschreibungenView from '@/views/MeineAusschreibungenView.vue'
 import AdminView from '@/views/AdminView.vue'
 import AdminAusschreibungenView from '@/views/AdminAusschreibungenView.vue'
 import AdminMeldungenView from '@/views/AdminMeldungenView.vue'
+import ChatView from '@/views/ChatView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -93,7 +94,13 @@ const router = createRouter({
       name: 'admin-meldungen',
       component: AdminMeldungenView,
       beforeEnter: authGuard
-      }
+      },
+    {
+    path: '/chat/:userId/:ausschreibungId',
+    name: 'chat',
+    component: ChatView,
+    beforeEnter: authGuard
+}
   ],
 })
 
