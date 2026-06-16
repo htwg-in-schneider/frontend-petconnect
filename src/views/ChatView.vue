@@ -28,6 +28,7 @@ async function loadMessages() {
     )
 
   messages.value =await response.json()
+  console.log(messages.value)
 }
 onMounted(async () => {
   await loadMessages()
@@ -113,10 +114,11 @@ async function sendRequest() {
 </script>
 
 <template>
+<!-- Gesamte Chat-Seite -->
 <div class="chat-page">
 
+  <!-- Kopfbereich mit Chatpartner -->
   <div class="chat-header">
-
     <img
       class="chat-avatar"
       src="../assets/images/User_Icon_Green.png"
@@ -133,89 +135,141 @@ async function sendRequest() {
     </div>
   </div>
 
+  <!-- Nachrichtenbereich -->
   <div class="messages-container">
     <div
       v-for="message in messages"
       :key="message.id"
       class="message-row"
     >
-      <div
-        :class="[
-          'message-bubble',
-          message.sender.id === currentUserId
-            ? 'own-message'
-            : 'other-message'
-        ]"
+    
+    <!-- Normale Textnachricht -->
+    <div
+      v-if="message.type === 'TEXT'"
+      :class="[
+      'message-bubble',
+      message.sender.id === currentUserId
+      ? 'own-message'
+      : 'other-message'
+      ]"
       >
-        {{ message.text }}
+      {{ message.text }}
+    </div>
+    
+    <!-- Betreuungsanfrage -->
+    <div
+      v-else-if="message.type === 'REQUEST'"
+      class="request-card"
+    >
+      <div class="request-title">
+        🤝 Betreuungsanfrage
+      </div>
+      <div class="request-text">
+        Interesse an der Betreuung wurde angefragt.
+      </div>
+      <div class="request-status">
+        OFFEN
       </div>
     </div>
   </div>
+</div>
 
-
+  <!-- Eingabebereich -->
   <div class="chat-input">
-  <button
-    class="icon-btn"
-    @click="showRequestPopup = true"
-  >
-    🤝
-  </button>
-
+    <button
+      class="icon-btn"
+      @click="showRequestPopup = true"
+    >
+      🤝
+    </button>
     <input
       v-model="text"
       placeholder="Nachricht schreiben..."
       @keyup.enter="sendMessage"
     >
-
-    <Button variant="secondary"
-    @click="sendMessage">
-      Senden
+    <Button 
+      variant="secondary"
+      @click="sendMessage">
+        Senden
     </Button>
-
   </div>
-
 </div>
 
+
+<!-- Popup für neue Betreuungsanfrage-->
 <div
   v-if="showRequestPopup"
   class="confirm-popup"
 >
-
   <h3>Betreuungsanfrage senden</h3>
-
   <p class="popup-text">
-  Mit einer Betreuungsanfrage signalisierst du Interesse
-  an der Betreuung dieses Tieres.
-</p>
-
-<p class="popup-text">
-  Weitere Details könnt ihr anschließend im Chat besprechen.
-</p>
-
+    Mit einer Betreuungsanfrage signalisierst du Interesse
+    an der Betreuung dieses Tieres.
+  </p>
+  <p class="popup-text">
+    Weitere Details könnt ihr anschließend im Chat besprechen.
+  </p>
   <div class="confirm-buttons">
+    <Button
+    variant="accent"
+    @click="sendRequest"
+    >
+        Anfrage senden
+    </Button>
 
-   <Button
-  variant="accent"
-  @click="sendRequest"
->
-  Anfrage senden
-</Button>
-
-<Button
-  variant="secondary"
-  @click="showRequestPopup = false"
->
-  Abbrechen
-</Button>
-
+    <Button
+      variant="secondary"
+      @click="showRequestPopup = false"
+    >
+        Abbrechen
+    </Button>
   </div>
-
 </div>
-
-
 </template>
 
 <style scoped>
+.request-card {
+  background: white;
+  border: 2px solid #E8CFCF;
+  border-radius: 20px;
+
+  padding: 18px 22px;
+  margin: 10px 0;
+
+  max-width: 380px;
+
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.request-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 1.1rem;
+  font-weight: 700;
+
+  margin-bottom: 12px;
+}
+
+.request-text {
+  color: #555;
+  margin-bottom: 15px;
+}
+
+.request-status {
+  display: inline-block;
+
+  background: #FFF4D6;
+  color: #A97900;
+
+  padding: 6px 12px;
+  border-radius: 999px;
+
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
 .chat-page {
   height: 100vh;
   display: flex;

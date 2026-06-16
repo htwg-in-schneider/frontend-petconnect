@@ -25,12 +25,13 @@ onMounted(async () => {
 </script>
 
 <template>
-
 <Navbar/>
-<div class="messages-page">
 
+<!-- Seite Nachrichtenübersicht -->
+<div class="messages-page">
   <h2>Meine Nachrichten</h2>
 
+  <!-- Chatliste -->
   <RouterLink
     v-for="chat in chats"
     :key="`${chat.userId}-${chat.ausschreibungId}`"
@@ -43,16 +44,14 @@ onMounted(async () => {
       class="chat-avatar"
     >
 
+    <!-- Chatinformationen -->
     <div class="chat-content">
-
       <div class="chat-name">
         {{ chat.userName }}
       </div>
-
       <div class="chat-preview">
         {{ chat.lastMessage }}
       </div>
-
     </div>
 
   </RouterLink>
