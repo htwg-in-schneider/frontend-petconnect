@@ -14,6 +14,7 @@ import AdminView from '@/views/AdminView.vue'
 import AdminAusschreibungenView from '@/views/AdminAusschreibungenView.vue'
 import AdminMeldungenView from '@/views/AdminMeldungenView.vue'
 import ChatView from '@/views/ChatView.vue'
+import MeineNachrichtenView from '@/views/MeineNachrichtenView.vue'
 
 const router = createRouter({
   history: createWebHistory(),
@@ -96,11 +97,17 @@ const router = createRouter({
       beforeEnter: authGuard
       },
     {
-    path: '/chat/:userId/:ausschreibungId',
+    path: '/chat/:userId',
     name: 'chat',
     component: ChatView,
     beforeEnter: authGuard
-}
+    },
+    {
+      path: '/meine-nachrichten',
+      name: 'meine-nachrichten',
+      component: MeineNachrichtenView,
+      beforeEnter: authGuard
+    }
   ],
 })
 

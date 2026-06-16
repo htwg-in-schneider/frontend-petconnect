@@ -7,9 +7,9 @@ const { getAccessTokenSilently } = useAuth0()
 const messages = ref([])
 const text = ref('')
 const route = useRoute()
+const chatPartner = ref(null)
+const currentUserId = ref(null)
 const userId = route.params.userId
-const ausschreibungId = route.params.ausschreibungId
-
 
 async function loadMessages() {
   const token = await getAccessTokenSilently()
@@ -26,10 +26,13 @@ async function loadMessages() {
 
   messages.value =await response.json()
 }
-onMounted(loadMessages)
+onMounted(async () => {
+  await loadMessages()
+  await loadCurrentUser()
+  await loadChatPartner()
+})
 
 async function sendMessage() {
-
   const token =await getAccessTokenSilently()
 
   await fetch(
@@ -47,10 +50,41 @@ async function sendMessage() {
       })
     }
   )
-
   text.value = ''
-
   loadMessages()
+}
+
+async function loadCurrentUser() {
+  const token = await getAccessTokenSilently()
+
+  const response = await fetch(
+    'http://localhost:8081/api/profile',
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  )
+  if (response.ok) {
+    const user = await response.json()
+    currentUserId.value = user.id
+  }
+}
+
+async function loadChatPartner() {
+  const token = await getAccessTokenSilently()
+  const response = await fetch(
+    `http://localhost:8081/api/users/${route.params.userId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  )
+
+  if (response.ok) {
+    chatPartner.value = await response.json()
+  }
 }
 </script>
 
@@ -58,12 +92,6 @@ async function sendMessage() {
 <div class="chat-page">
 
   <div class="chat-header">
-    <RouterLink
-      :to="`/ausschreibung/${ausschreibungId}`"
-      class="back-btn"
-    >
-      ←
-    </RouterLink>
 
     <img
       class="chat-avatar"
@@ -71,7 +99,13 @@ async function sendMessage() {
     >
 
     <div>
-      <h4 class="mb-0">Tierbesitzer</h4>
+      <h4 class="mb-0">
+        {{ chatPartner?.firstName }}
+        {{ chatPartner?.lastName }}
+      </h4>
+      <small>
+        {{ chatPartner?.role }}
+      </small>
     </div>
   </div>
 
@@ -162,14 +196,14 @@ async function sendMessage() {
 }
 
 .own-message {
-  margin-right: auto;
+  margin-left: auto;
   background: #9BAF96;
   color: white;
   border-bottom-right-radius: 5px;
 }
 
 .other-message {
-  margin-left: auto;
+  margin-right: auto;
   background: white;
   border: 1px solid #e5e5e5;
   border-bottom-left-radius: 5px;

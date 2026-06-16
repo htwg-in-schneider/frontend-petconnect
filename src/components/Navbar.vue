@@ -101,6 +101,17 @@ watch(isAuthenticated, () => {
                     </li>
 
                     <li
+                    v-if="role === 'TIERBESITZER' || role === 'TIERSUCHER'"
+                    class="nav-item"
+                    >
+                        <RouterLink to="/meine-nachrichten">
+                            <Button variant="secondary">
+                                Meine Nachrichten
+                            </Button>
+                        </RouterLink>
+                    </li>
+
+                    <li
                     v-if="role === 'TIERBESITZER'"
                     class="nav-item"
                     >
