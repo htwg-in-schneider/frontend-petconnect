@@ -19,7 +19,7 @@ async function loadMessages() {
 
   const response =
     await fetch(
-      `http://localhost:8081/api/messages/chat/${route.params.userId}`,
+      `http://localhost:8081/api/messages/chat/${route.params.userId}/${route.params.ausschreibungId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`
@@ -49,6 +49,7 @@ async function sendMessage() {
       body: JSON.stringify({
         receiverId:
           route.params.userId,
+          ausschreibungId: route.params.ausschreibungId,
         text: text.value
       })
     }

@@ -97,7 +97,7 @@ const router = createRouter({
       beforeEnter: authGuard
       },
     {
-    path: '/chat/:userId',
+    path: '/chat/:userId/:ausschreibungId',
     name: 'chat',
     component: ChatView,
     beforeEnter: authGuard

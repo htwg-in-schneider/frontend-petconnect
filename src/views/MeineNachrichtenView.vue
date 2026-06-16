@@ -33,8 +33,8 @@ onMounted(async () => {
 
   <RouterLink
     v-for="chat in chats"
-    :key="chat.userId"
-    :to="`/chat/${chat.userId}`"
+    :key="`${chat.userId}-${chat.ausschreibungId}`"
+    :to="`/chat/${chat.userId}/${chat.ausschreibungId}`"
     class="chat-card"
   >
 
