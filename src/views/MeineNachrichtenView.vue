@@ -49,6 +49,9 @@ onMounted(async () => {
       <div class="chat-name">
         {{ chat.userName }}
       </div>
+      <div class="chat-subtitle">
+      🐾 {{ chat.petName }}
+      </div>
       <div class="chat-preview">
         {{ chat.lastMessage }}
       </div>

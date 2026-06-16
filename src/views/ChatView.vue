@@ -12,6 +12,7 @@ const chatPartner = ref(null)
 const currentUserId = ref(null)
 const userId = route.params.userId
 const showRequestPopup = ref(false)
+const petName = ref('')
 
 
 async function loadMessages() {
@@ -29,6 +30,10 @@ async function loadMessages() {
 
   messages.value =await response.json()
   console.log(messages.value)
+  if (messages.value.length > 0) {
+  petName.value =
+    messages.value[0].ausschreibung.petName
+}
 }
 onMounted(async () => {
   await loadMessages()
@@ -129,9 +134,10 @@ async function sendRequest() {
         {{ chatPartner?.firstName }}
         {{ chatPartner?.lastName }}
       </h4>
-      <small>
+      <small class="chat-subtitle">
         {{ chatPartner?.role }}
       </small>
+      <p>🐾{{ petName }}</p>
     </div>
   </div>
 
@@ -228,6 +234,10 @@ async function sendRequest() {
 </template>
 
 <style scoped>
+.chat-subtitle {
+  color: #666;
+  font-size: 0.9rem;
+}
 .request-card {
   background: white;
   border: 2px solid #E8CFCF;
