@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuth0 } from '@auth0/auth0-vue'
+import Button from '@/components/Button.vue'
 
 const { getAccessTokenSilently } = useAuth0()
 const messages = ref([])
@@ -10,6 +11,8 @@ const route = useRoute()
 const chatPartner = ref(null)
 const currentUserId = ref(null)
 const userId = route.params.userId
+const showRequestPopup = ref(false)
+
 
 async function loadMessages() {
   const token = await getAccessTokenSilently()
@@ -86,6 +89,26 @@ async function loadChatPartner() {
     chatPartner.value = await response.json()
   }
 }
+
+async function sendRequest() {
+  const token =
+    await getAccessTokenSilently()
+
+  await fetch(
+    'http://localhost:8081/api/anfragen',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        ausschreibungId: route.params.ausschreibungId
+      })
+    }
+  )
+  showRequestPopup.value = false
+}
 </script>
 
 <template>
@@ -128,19 +151,67 @@ async function loadChatPartner() {
     </div>
   </div>
 
+
   <div class="chat-input">
+  <button
+    class="icon-btn"
+    @click="showRequestPopup = true"
+  >
+    🤝
+  </button>
+
     <input
       v-model="text"
       placeholder="Nachricht schreiben..."
       @keyup.enter="sendMessage"
     >
 
-    <button @click="sendMessage">
+    <Button variant="secondary"
+    @click="sendMessage">
       Senden
-    </button>
+    </Button>
+
   </div>
 
 </div>
+
+<div
+  v-if="showRequestPopup"
+  class="confirm-popup"
+>
+
+  <h3>Betreuungsanfrage senden</h3>
+
+  <p class="popup-text">
+  Mit einer Betreuungsanfrage signalisierst du Interesse
+  an der Betreuung dieses Tieres.
+</p>
+
+<p class="popup-text">
+  Weitere Details könnt ihr anschließend im Chat besprechen.
+</p>
+
+  <div class="confirm-buttons">
+
+   <Button
+  variant="accent"
+  @click="sendRequest"
+>
+  Anfrage senden
+</Button>
+
+<Button
+  variant="secondary"
+  @click="showRequestPopup = false"
+>
+  Abbrechen
+</Button>
+
+  </div>
+
+</div>
+
+
 </template>
 
 <style scoped>
@@ -165,13 +236,6 @@ async function loadChatPartner() {
   height: 55px;
   border-radius: 50%;
   object-fit: cover;
-}
-
-.back-btn {
-  text-decoration: none;
-  color: black;
-  font-size: 2rem;
-  margin-right: 10px;
 }
 
 .messages-container {
@@ -229,16 +293,44 @@ async function loadChatPartner() {
   border-color: #9BAF96;
 }
 
-.chat-input button {
-  background: #9BAF96;
-  color: white;
-  border: none;
-  border-radius: 20px;
-  padding: 0 25px;
-  font-weight: 600;
+.confirm-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  background: white;
+  padding: 40px;
+  border-radius: 25px;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+
+  z-index: 9999;
+
+  min-width: 400px;
+  text-align: center;
 }
 
-.chat-input button:hover {
-  background: #889d83;
+.confirm-popup p {
+  font-size: 1.1rem;
+  margin: 25px 0;
+}
+
+.confirm-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+.icon-btn {
+  width: 50px;
+  height: 50px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #E8CFCF;
+  font-size: 1.4rem;
+
+  cursor: pointer;
 }
 </style>
