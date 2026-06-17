@@ -11,6 +11,7 @@ import Footer from '@/components/Footer.vue'
 import Button from '@/components/Button.vue'
 import AusschreibungReview from '@/components/AusschreibungReview.vue'
 import { useAuth0 } from '@auth0/auth0-vue'
+import ReviewForm from '@/components/ReviewForm.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -318,6 +319,7 @@ async function loadRole() {
 
 <AusschreibungReview :ausschreibungId="route.params.id"
 />
+<!--<ReviewForm/>-->
 
 <Footer />
 
