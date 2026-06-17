@@ -320,7 +320,7 @@ async function loadRole() {
 
 <AusschreibungReview :ausschreibungId="route.params.id"
 />
-<!--<ReviewForm/>-->
+<ReviewForm/>
 
 <Footer />
 

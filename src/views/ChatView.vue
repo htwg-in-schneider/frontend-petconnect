@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuth0 } from '@auth0/auth0-vue'
 import Button from '@/components/Button.vue'
@@ -13,7 +13,17 @@ const currentUserId = ref(null)
 const userId = route.params.userId
 const showRequestPopup = ref(false)
 const petName = ref('')
+const ownerId = ref(null)
+let refreshInterval = null
 
+onMounted(async () => {
+  await loadMessages()
+  await loadCurrentUser()
+  await loadChatPartner()
+  refreshInterval = setInterval(() => {
+    loadMessages()
+  }, 3000)
+})
 
 async function loadMessages() {
   const token = await getAccessTokenSilently()
@@ -33,13 +43,10 @@ async function loadMessages() {
   if (messages.value.length > 0) {
   petName.value =
     messages.value[0].ausschreibung.petName
+    ownerId.value =
+    messages.value[0].ausschreibung.owner.id
 }
 }
-onMounted(async () => {
-  await loadMessages()
-  await loadCurrentUser()
-  await loadChatPartner()
-})
 
 async function sendMessage() {
   const token =await getAccessTokenSilently()
@@ -116,6 +123,40 @@ async function sendRequest() {
   )
   showRequestPopup.value = false
 }
+
+async function acceptRequest(id) {
+  const token =await getAccessTokenSilently()
+
+  await fetch(
+    `http://localhost:8081/api/anfragen/${id}/accept`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  )
+  loadMessages()
+}
+
+async function rejectRequest(id) {
+  const token =await getAccessTokenSilently()
+
+  await fetch(
+    `http://localhost:8081/api/anfragen/${id}/reject`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  )
+  loadMessages()
+}
+
+onUnmounted(() => {
+  clearInterval(refreshInterval)
+})
 </script>
 
 <template>
@@ -165,16 +206,43 @@ async function sendRequest() {
     <!-- Betreuungsanfrage -->
     <div
       v-else-if="message.type === 'REQUEST'"
-      class="request-card"
+      :class="[
+      'request-card',
+      message.sender.id === currentUserId
+      ? 'own-request'
+      : 'other-request'
+  ]"
     >
       <div class="request-title">
         🤝 Betreuungsanfrage
       </div>
-      <div class="request-text">
+      <div class="request-text"
+      >
         Interesse an der Betreuung wurde angefragt.
       </div>
-      <div class="request-status">
-        OFFEN
+      <div class="request-status"
+      :class="message.anfrage.status"
+      >
+        {{ message.anfrage.status }}
+      </div>
+      <div
+        v-if="
+        message.anfrage.status === 'OFFEN' &&
+        currentUserId === message.receiver.id"
+        >
+          <Button
+          variant="accent"
+          @click="acceptRequest(message.anfrage.id)"
+          >
+            Annehmen
+          </Button>
+
+          <Button
+          variant="secondary"
+          @click="rejectRequest(message.anfrage.id)"
+          >
+            Ablehnen
+          </Button>
       </div>
     </div>
   </div>
@@ -183,6 +251,7 @@ async function sendRequest() {
   <!-- Eingabebereich -->
   <div class="chat-input">
     <button
+      v-if="ownerId && currentUserId !== ownerId"
       class="icon-btn"
       @click="showRequestPopup = true"
     >
@@ -242,13 +311,20 @@ async function sendRequest() {
   background: white;
   border: 2px solid #E8CFCF;
   border-radius: 20px;
-
   padding: 18px 22px;
   margin: 10px 0;
-
   max-width: 380px;
-
   box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.own-request {
+  margin-left: auto;
+  border-color: #9BAF96;
+}
+
+.other-request {
+  margin-right: auto;
+  border-color: #E8CFCF;
 }
 
 .request-title {
@@ -397,5 +473,19 @@ async function sendRequest() {
   font-size: 1.4rem;
 
   cursor: pointer;
+}
+.request-status.ANGENOMMEN {
+  background: #dff5e1;
+  color: green;
+}
+
+.request-status.ABGELEHNT {
+  background: #ffe1e1;
+  color: red;
+}
+
+.request-status.OFFEN {
+  background: #fff4d6;
+  color: #a97900;
 }
 </style>
