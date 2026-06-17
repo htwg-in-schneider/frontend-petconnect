@@ -181,6 +181,7 @@ async function loadRole() {
 
 <Navbar />
 
+
 <section
   v-if="ausschreibung"
   class="container py-4"
