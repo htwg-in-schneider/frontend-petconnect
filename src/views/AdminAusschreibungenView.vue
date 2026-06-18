@@ -11,7 +11,7 @@ const search = ref('')
 
 async function fetchAusschreibungen() {
   const response = await fetch(
-    '${import.meta.env.VITE_API_BASE_URL}/api/ausschreibungen'
+    `${import.meta.env.VITE_API_BASE_URL}/api/ausschreibungen`
   )
   ausschreibungen.value =await response.json()
 }

@@ -13,8 +13,8 @@ import {
 const route = useRoute()
 const router = useRouter()
 
-const url ='${import.meta.env.VITE_API_BASE_URL}/api/ausschreibungen'
-const animalTypeUrl ='${import.meta.env.VITE_API_BASE_URL}/api/animaltype'
+const url =`${import.meta.env.VITE_API_BASE_URL}/api/ausschreibungen`
+const animalTypeUrl =`${import.meta.env.VITE_API_BASE_URL}/api/animaltype`
 
 const animalTypes = ref([])
 const translations = ref({})

@@ -52,7 +52,7 @@ async function sendMessage() {
   const token =await getAccessTokenSilently()
 
   await fetch(
-    '${import.meta.env.VITE_API_BASE_URL}/api/messages',
+    `${import.meta.env.VITE_API_BASE_URL}/api/messages`,
     {
       method: 'POST',
       headers: {
@@ -75,7 +75,7 @@ async function loadCurrentUser() {
   const token = await getAccessTokenSilently()
 
   const response = await fetch(
-    '${import.meta.env.VITE_API_BASE_URL}/api/profile',
+    `${import.meta.env.VITE_API_BASE_URL}/api/profile`,
     {
       headers: {
         Authorization: `Bearer ${token}`
@@ -109,7 +109,7 @@ async function sendRequest() {
     await getAccessTokenSilently()
 
   await fetch(
-    '${import.meta.env.VITE_API_BASE_URL}/api/anfragen',
+    `${import.meta.env.VITE_API_BASE_URL}/api/anfragen`,
     {
       method: 'POST',
       headers: {

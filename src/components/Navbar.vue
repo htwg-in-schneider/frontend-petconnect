@@ -15,7 +15,7 @@ async function loadRole() {
   try {
     const token = await getAccessTokenSilently()
     const response = await fetch(
-      '${import.meta.env.VITE_API_BASE_URL}/api/profile',
+      `${import.meta.env.VITE_API_BASE_URL}/api/profile`,
       {
         headers: {
           Authorization: `Bearer ${token}`

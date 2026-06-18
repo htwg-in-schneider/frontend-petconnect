@@ -27,8 +27,8 @@ const report = ref({
 const role = ref(null)
 const currentUserId = ref(null)
 
-const url = '${import.meta.env.VITE_API_BASE_URL}/api/ausschreibungen';
-const animalTypeUrl ='${import.meta.env.VITE_API_BASE_URL}/api/animaltype'
+const url = `${import.meta.env.VITE_API_BASE_URL}/api/ausschreibungen`;
+const animalTypeUrl =`${import.meta.env.VITE_API_BASE_URL}/api/animaltype`
 
 onMounted(async () => {
   await loadRole()
@@ -158,7 +158,7 @@ async function loadRole() {
   try {
     const token = await getAccessTokenSilently()
     const response = await fetch(
-      '${import.meta.env.VITE_API_BASE_URL}/api/profile',
+      `${import.meta.env.VITE_API_BASE_URL}/api/profile`,
       {
         headers: {
           Authorization: `Bearer ${token}`
