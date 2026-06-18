@@ -4,6 +4,7 @@ import { ref, onMounted } from 'vue'
 import Button from '@/components/Button.vue'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
+import { useAuth0 } from '@auth0/auth0-vue'
 
 import {
   useRoute,
@@ -12,6 +13,7 @@ import {
 
 const route = useRoute()
 const router = useRouter()
+const { getAccessTokenSilently } = useAuth0()
 
 const url =`${import.meta.env.VITE_API_BASE_URL}/api/ausschreibungen`
 const animalTypeUrl =`${import.meta.env.VITE_API_BASE_URL}/api/animaltype`
@@ -71,10 +73,12 @@ async function fetchTranslations() {
 
 async function updateAusschreibung() {
   try {
+    const accessToken = await getAccessTokenSilently()
     const response = await fetch(`${url}/${ausschreibung.value.id}`,
       {method: 'PUT',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`
         },
         body: JSON.stringify(
           ausschreibung.value
