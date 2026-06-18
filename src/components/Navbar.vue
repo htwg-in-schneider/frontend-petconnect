@@ -125,7 +125,7 @@ watch(isAuthenticated, () => {
 
 
                     <li 
-                    v-if="role === 'TIERBESITZER' || role==='TIERSUCHER'"
+                    v-if="role !== 'ADMIN'"
                     class="nav-item" 
                     >
                         <RouterLink to="/ausschreibungen">
