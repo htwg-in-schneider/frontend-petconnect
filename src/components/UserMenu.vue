@@ -26,7 +26,7 @@ const handleLogin = () => {
 const handleLogout = () => {
   logout({
     logoutParams: {
-      returnTo: window.location.origin
+      returnTo: window.location.origin + import.meta.env.BASE_URL
     }
   })
 }
