@@ -27,8 +27,8 @@ const report = ref({
 const role = ref(null)
 const currentUserId = ref(null)
 
-const url = 'http://localhost:8081/api/ausschreibungen';
-const animalTypeUrl ='http://localhost:8081/api/animaltype'
+const url = '${import.meta.env.VITE_API_BASE_URL}/api/ausschreibungen';
+const animalTypeUrl ='${import.meta.env.VITE_API_BASE_URL}/api/animaltype'
 
 onMounted(async () => {
   await loadRole()
@@ -113,7 +113,7 @@ async function sendReport() {
     console.log("Owner:", ausschreibung.value.owner)
 
     const response = await fetch(
-      `http://localhost:8081/api/meldungen/${ausschreibung.value.owner.id}`,
+      `${import.meta.env.VITE_API_BASE_URL}/api/meldungen/${ausschreibung.value.owner.id}`,
       {
         method: 'POST',
         headers: {
@@ -158,7 +158,7 @@ async function loadRole() {
   try {
     const token = await getAccessTokenSilently()
     const response = await fetch(
-      'http://localhost:8081/api/profile',
+      '${import.meta.env.VITE_API_BASE_URL}/api/profile',
       {
         headers: {
           Authorization: `Bearer ${token}`

@@ -15,7 +15,7 @@ async function fetchMeldungen() {
     await getAccessTokenSilently()
 
   const response = await fetch(
-    'http://localhost:8081/api/meldungen',
+    '${import.meta.env.VITE_API_BASE_URL}/api/meldungen',
     {
       headers: {
         Authorization: `Bearer ${token}`

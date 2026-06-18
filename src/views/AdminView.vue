@@ -18,7 +18,7 @@ async function fetchUsers() {
     await getAccessTokenSilently()
   const response =
     await fetch(
-      'http://localhost:8081/api/users',
+      '${import.meta.env.VITE_API_BASE_URL}/api/users',
       {
       headers: {
         Authorization:
@@ -57,7 +57,7 @@ const filteredUsers = computed(() => {
 async function saveUser() {
 const token = await getAccessTokenSilently()
 const response = await fetch(
-  `http://localhost:8081/api/users/${selectedUser.value.id}`,
+  `${import.meta.env.VITE_API_BASE_URL}/api/users/${selectedUser.value.id}`,
   {
     method: 'PUT',
     headers: {

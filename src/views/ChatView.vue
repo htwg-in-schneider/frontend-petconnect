@@ -30,7 +30,7 @@ async function loadMessages() {
 
   const response =
     await fetch(
-      `http://localhost:8081/api/messages/chat/${route.params.userId}/${route.params.ausschreibungId}`,
+      `${import.meta.env.VITE_API_BASE_URL}/api/messages/chat/${route.params.userId}/${route.params.ausschreibungId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`
@@ -52,7 +52,7 @@ async function sendMessage() {
   const token =await getAccessTokenSilently()
 
   await fetch(
-    'http://localhost:8081/api/messages',
+    '${import.meta.env.VITE_API_BASE_URL}/api/messages',
     {
       method: 'POST',
       headers: {
@@ -75,7 +75,7 @@ async function loadCurrentUser() {
   const token = await getAccessTokenSilently()
 
   const response = await fetch(
-    'http://localhost:8081/api/profile',
+    '${import.meta.env.VITE_API_BASE_URL}/api/profile',
     {
       headers: {
         Authorization: `Bearer ${token}`
@@ -91,7 +91,7 @@ async function loadCurrentUser() {
 async function loadChatPartner() {
   const token = await getAccessTokenSilently()
   const response = await fetch(
-    `http://localhost:8081/api/users/${route.params.userId}`,
+    `${import.meta.env.VITE_API_BASE_URL}/api/users/${route.params.userId}`,
     {
       headers: {
         Authorization: `Bearer ${token}`
@@ -109,7 +109,7 @@ async function sendRequest() {
     await getAccessTokenSilently()
 
   await fetch(
-    'http://localhost:8081/api/anfragen',
+    '${import.meta.env.VITE_API_BASE_URL}/api/anfragen',
     {
       method: 'POST',
       headers: {
@@ -128,7 +128,7 @@ async function acceptRequest(id) {
   const token =await getAccessTokenSilently()
 
   await fetch(
-    `http://localhost:8081/api/anfragen/${id}/accept`,
+    `${import.meta.env.VITE_API_BASE_URL}/api/anfragen/${id}/accept`,
     {
       method: 'POST',
       headers: {
@@ -143,7 +143,7 @@ async function rejectRequest(id) {
   const token =await getAccessTokenSilently()
 
   await fetch(
-    `http://localhost:8081/api/anfragen/${id}/reject`,
+    `${import.meta.env.VITE_API_BASE_URL}/api/anfragen/${id}/reject`,
     {
       method: 'POST',
       headers: {

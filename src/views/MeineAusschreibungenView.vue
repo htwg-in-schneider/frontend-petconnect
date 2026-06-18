@@ -8,7 +8,7 @@ import Footer from '@/components/Footer.vue'
 import AusschreibungCard from '@/components/AusschreibungCard.vue'
 import Button from '@/components/Button.vue'
 
-const url = 'http://localhost:8081/api/ausschreibungen/meine';
+const url = '${import.meta.env.VITE_API_BASE_URL}/api/ausschreibungen/meine';
 const ausschreibungen = ref([])
 const role = ref(null)
 
@@ -29,7 +29,7 @@ async function fetchAusschreibungen() {
     const token = await getAccessTokenSilently()
 
     const profileResponse = await fetch(
-      'http://localhost:8081/api/profile',
+      '${import.meta.env.VITE_API_BASE_URL}/api/profile',
       {
         headers: {
           Authorization: `Bearer ${token}`

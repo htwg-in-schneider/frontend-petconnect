@@ -12,7 +12,7 @@ onMounted(async () => {
   const token = await getAccessTokenSilently()
 
   const response = await fetch(
-    'http://localhost:8081/api/messages/overview',
+    '${import.meta.env.VITE_API_BASE_URL}/api/messages/overview',
     {
       headers: {
         Authorization: `Bearer ${token}`
