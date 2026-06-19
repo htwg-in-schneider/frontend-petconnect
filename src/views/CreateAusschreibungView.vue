@@ -6,6 +6,7 @@ import Button from '@/components/Button.vue'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import { useAuth0 } from '@auth0/auth0-vue'
+import { validateAusschreibung } from '@/utils/validation'
 
 const router = useRouter()
 const { getAccessTokenSilently } = useAuth0()
@@ -53,68 +54,9 @@ onMounted(async () => {
 
 })
 
-function validate() {
-  errors.value = {
-    animalType: '',
-    petName: '',
-    petAge: '',
-    city: '',
-    postalCode: '',
-    description: '',
-    dateFrom: '',
-    dateTo: '',
-    compensation: '',
-    imageUrl: ''
-  }
-  //Tierart
-  if (!ausschreibung.value.animalType) {
-  errors.value.animalType =
-    'Bitte eine Tierart auswählen'
-  }
-  // Tiername
-  if (!ausschreibung.value.petName.trim()) {
-    errors.value.petName = 'Tiername ist erforderlich'
-  }
-  // Alter
-  if (ausschreibung.value.petAge < 0) {
-    errors.value.petAge = 'Alter darf nicht negativ sein'
-  }
-  // Stadt
-  if (!ausschreibung.value.city.trim()) {
-    errors.value.city = 'Stadt ist erforderlich'
-  }
-  // PLZ
-  if (!ausschreibung.value.postalCode.trim()) {
-  errors.value.postalCode ='Bitte eine Postleitzahl angeben'
-  }
-  if (ausschreibung.value.postalCode &&!/^\d{5}$/.test(ausschreibung.value.postalCode)) {
-    errors.value.postalCode ='PLZ muss aus 5 Ziffern bestehen'
-  }
-  // Beschreibung
-  if (!ausschreibung.value.description ||ausschreibung.value.description.trim().length < 10) {
-    errors.value.description ='Beschreibung muss mindestens 10 Zeichen haben'
-  }
-  if (!ausschreibung.value.compensation) {
-  errors.value.compensation ='Bitte eine Vergütung auswählen'
-  }
-  // Datum
-  if (!ausschreibung.value.dateFrom) {
-    errors.value.dateFrom ='Startdatum erforderlich'
-  }
-  if (!ausschreibung.value.dateTo) {
-    errors.value.dateTo ='Enddatum erforderlich'
-  }
-  if (ausschreibung.value.dateFrom &&ausschreibung.value.dateTo &&
-    ausschreibung.value.dateTo <ausschreibung.value.dateFrom) {
-    errors.value.dateTo ='Enddatum muss nach dem Startdatum liegen'
-  }
-  return Object.values(errors.value)
-    .every(error => error === '')
-}
-
 async function createAusschreibung() {
-  if (!validate()) {
-    return
+  if (!validateAusschreibung(ausschreibung.value,errors.value)) {
+  return
   }
   try {
     const token = await getAccessTokenSilently()

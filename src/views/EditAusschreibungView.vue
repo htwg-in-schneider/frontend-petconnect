@@ -5,6 +5,7 @@ import Button from '@/components/Button.vue'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import { useAuth0 } from '@auth0/auth0-vue'
+import { validateAusschreibung }from '@/utils/validation'
 
 import {
   useRoute,
@@ -20,10 +21,21 @@ const animalTypeUrl =`${import.meta.env.VITE_API_BASE_URL}/api/animaltype`
 
 const animalTypes = ref([])
 const translations = ref({})
-
 const ausschreibung = ref({})
 const showUpdateSuccess = ref(false)
 const showUpdateError = ref(false)
+const errors = ref({
+  animalType: '',
+  petName: '',
+  petAge: '',
+  city: '',
+  postalCode: '',
+  description: '',
+  dateFrom: '',
+  dateTo: '',
+  compensation: '',
+  imageUrl: ''
+})
 
 onMounted(async () => {
   await Promise.all([
@@ -72,6 +84,9 @@ async function fetchTranslations() {
 }
 
 async function updateAusschreibung() {
+  if (!validateAusschreibung(ausschreibung.value,errors.value)) {
+  return
+  }
   try {
     const accessToken = await getAccessTokenSilently()
     const response = await fetch(`${url}/${ausschreibung.value.id}`,
@@ -128,17 +143,16 @@ function cancelEdit() {
       </label>
       <select
         class="form-select"
+        :class="{ 'is-invalid': errors.animalType }"
         v-model="ausschreibung.animalType"
-        required
+        @change="errors.animalType = ''"
       >
       <option
         disabled
         value=""
       >
       Bitte wählen
-
       </option>
-
       <option
         v-for="animal in animalTypes"
         :key="animal"
@@ -147,6 +161,9 @@ function cancelEdit() {
         {{ translations[animal] || animal }}
       </option>
       </select>
+      <div class="invalid-feedback">
+          {{ errors.animalType }}
+      </div>
     </div>
 
     <!-- Tiername -->
@@ -157,8 +174,14 @@ function cancelEdit() {
       <input
         type="text"
         class="form-control"
+        :class="{ 'is-invalid': errors.petName }"
         v-model="ausschreibung.petName"
-      >
+        @input="errors.petName = ''"
+        >
+
+      <div class="invalid-feedback">
+        {{ errors.petName }}
+      </div>
     </div>
 
     <!-- Alter -->
@@ -169,8 +192,13 @@ function cancelEdit() {
       <input
         type="number"
         class="form-control"
+       :class="{ 'is-invalid': errors.petAge }"
         v-model="ausschreibung.petAge"
+        @input="errors.petAge = ''"
       >
+      <div class="invalid-feedback">
+        {{ errors.petAge }}
+  </div>
     </div>
 
     <!-- Beschreibung -->
@@ -180,8 +208,14 @@ function cancelEdit() {
       </label>
       <textarea
         class="form-control description-box"
-        v-model="ausschreibung.description">
+        :class="{ 'is-invalid': errors.description }"
+        v-model="ausschreibung.description"
+        @input="errors.description = ''"
+      >
       </textarea>
+      <div class="invalid-feedback">
+        {{ errors.description }}
+      </div>
     </div>
 
     <!-- PLZ -->
@@ -192,8 +226,13 @@ function cancelEdit() {
       <input
         type="text"
         class="form-control"
+        :class="{ 'is-invalid': errors.postalCode }"
+        @input="errors.postalCode = ''"
         v-model="ausschreibung.postalCode"
       >
+       <div class="invalid-feedback">
+    {{ errors.postalCode }}
+  </div>
     </div>
 
     <!-- Stadt -->
@@ -204,9 +243,13 @@ function cancelEdit() {
       <input
         type="text"
         class="form-control"
+       :class="{ 'is-invalid': errors.city }"
         v-model="ausschreibung.city"
-        required
+        @input="errors.city = ''"
       >
+      <div class="invalid-feedback">
+     {{ errors.city }}
+      </div>
     </div>
 
     <!-- Vergütung -->
@@ -216,8 +259,9 @@ function cancelEdit() {
       </label>
       <select
         class="form-select"
+        :class="{ 'is-invalid': errors.compensation }"
         v-model="ausschreibung.compensation"
-        required
+        @change="errors.compensation = ''"
       >
         <option value="Tausch">
           Tausch
@@ -226,6 +270,9 @@ function cancelEdit() {
           Bezahlung
         </option>
       </select>
+      <div class="invalid-feedback">
+        {{ errors.compensation }}
+      </div>
     </div>
 
     <!-- Bild URL -->
@@ -258,9 +305,13 @@ function cancelEdit() {
         <input
           type="date"
           class="form-control"
+          :class="{ 'is-invalid': errors.dateFrom }"
+          @input="errors.dateFrom = ''"
           v-model="ausschreibung.dateFrom"
-          required
         >
+        <div class="invalid-feedback">
+        {{ errors.dateFrom }}
+        </div>
       </div>
       <div class="col-6 mb-4">
         <label class="form-label">
@@ -269,9 +320,13 @@ function cancelEdit() {
         <input
           type="date"
           class="form-control"
+          :class="{ 'is-invalid': errors.dateTo }"
+          @input="errors.dateTo = ''"
           v-model="ausschreibung.dateTo"
-          required
         >
+        <div class="invalid-feedback">
+          {{ errors.dateTo }}
+        </div>
       </div>
     </div>
 
