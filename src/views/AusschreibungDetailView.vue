@@ -12,6 +12,7 @@ import Button from '@/components/Button.vue'
 import AusschreibungReview from '@/components/AusschreibungReview.vue'
 import { useAuth0 } from '@auth0/auth0-vue'
 import ReviewForm from '@/components/ReviewForm.vue'
+import { validateReport } from '@/utils/validation'
 
 const route = useRoute()
 const router = useRouter()
@@ -21,6 +22,10 @@ const { isAuthenticated, getAccessTokenSilently } = useAuth0()
 const showReportPopup = ref(false)
 
 const report = ref({
+  grund: '',
+  beschreibung: ''
+})
+const reportErrors = ref({
   grund: '',
   beschreibung: ''
 })
@@ -101,17 +106,17 @@ async function deleteAusschreibung() {
 }
 
 function formatDate(dateString) {
-
   return new Date(dateString)
     .toLocaleDateString('de-DE')
 }
   
 async function sendReport() {
+  if (!validateReport(report.value,reportErrors.value)) {
+    return
+  }
   try {
     const token = await getAccessTokenSilently()
-
     console.log("Owner:", ausschreibung.value.owner)
-
     const response = await fetch(
       `${import.meta.env.VITE_API_BASE_URL}/api/meldungen/${ausschreibung.value.owner.id}`,
       {
@@ -123,22 +128,16 @@ async function sendReport() {
         body: JSON.stringify(report.value)
       }
     )
-
     console.log("Status:", response.status)
-
     if (!response.ok) {
       const text = await response.text()
       console.log(text)
     }
-
     showReportPopup.value = false
-
   } catch (error) {
     console.error(error)
   }
 }
-
-
 
 async function fetchTranslations() {
   try {
@@ -199,32 +198,25 @@ async function loadRole() {
     class="detail-image"
     alt="Tierbild"
   >
-
   <div class="info-line">
-
     <img
       src="../assets/images/Green_location_pin_icon.png"
       class="small-icon"
       alt="Standort"
     >
-
     {{ ausschreibung.city }}
-
   </div>
 
   <div class="info-line">
-
     <img
       src="../assets/images/calendar_icon.png"
       class="small-icon"
       alt="Kalender"
     >
-
     {{ formatDate(ausschreibung.dateFrom) }} - {{ formatDate(ausschreibung.dateTo) }}
   </div>
 
   <div class="info-grid">
-
     <div class="info-box">
       <small>Tierart</small>
       <p>{{translations[ausschreibung.animalType] ||
@@ -255,29 +247,25 @@ async function loadRole() {
       {{ ausschreibung.description }}
     </p>
   </div>
-
   
 <div v-if="
     isAuthenticated && !canEdit
   "class="owner-card">
-
   <h3>Tierbesitzer/-in</h3>
-
   <div class="owner-info">
     <img
       src="../assets/images/User_Icon_Green.png"
       class="owner-avatar"
       alt="Profilbild"
     >
-
     <div>
       <div class="owner-name">
         {{ ausschreibung.owner?.firstName }}
       </div>
     </div>
-
   </div>
 
+<div class="owner-buttons">
  <RouterLink
   :to="`/chat/${ausschreibung.owner.id}/${ausschreibung.id}`"
 >
@@ -285,14 +273,10 @@ async function loadRole() {
       Nachricht
     </Button>
   </RouterLink>
-
-</div>
-
-<div
+  <div
   v-if="
     isAuthenticated && !canEdit
   "
-  class="button-group"
 >
   <Button
     variant="secondary"
@@ -300,6 +284,8 @@ async function loadRole() {
   >
     Benutzer melden
   </Button>
+</div>
+</div>
 </div>
 
   <div v-if="canEdit" class="button-group">
@@ -321,7 +307,6 @@ async function loadRole() {
 <AusschreibungReview :ausschreibungId="route.params.id"
 />
 <ReviewForm/>
-
 <Footer />
 
 <div
@@ -360,7 +345,12 @@ async function loadRole() {
   <select
     v-model="report.grund"
     class="form-control mb-3"
+    :class="{ 'is-invalid': reportErrors.grund }"
+    @change="reportErrors.grund = ''"
   >
+  <div class="invalid-feedback d-block">
+  {{ reportErrors.grund }}
+  </div>
     <option value="">
       Bitte wählen
     </option>
@@ -377,8 +367,13 @@ async function loadRole() {
   <textarea
     v-model="report.beschreibung"
     class="form-control mb-3"
+    :class="{ 'is-invalid': reportErrors.beschreibung }"
+    @input="reportErrors.beschreibung = ''"
     placeholder="Beschreibung"
   />
+  <div class="invalid-feedback d-block">
+    {{ reportErrors.beschreibung }}
+  </div>
 
   <div class="confirm-buttons">
     <Button
@@ -453,6 +448,15 @@ async function loadRole() {
     flex-direction: row;
     gap: 40px;
     justify-content: center;
+}
+.owner-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.owner-buttons > * {
+  flex: 1;
 }
 
 .success-popup {

@@ -5,10 +5,10 @@ import { onMounted, ref } from 'vue'
 
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
+import {validateProfile} from '@/utils/validation'
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 const {
-
   user,
   isAuthenticated,
   isLoading,
@@ -20,6 +20,10 @@ const bearerToken = ref('')
 const error = ref('')
 const showSaveSuccess = ref(false)
 const showSaveError = ref(false)
+const errors = ref({
+  firstName: '',
+  lastName: '',
+})
 
 function copyToClipboard(event) {
   event.target.select()
@@ -43,6 +47,9 @@ function getRoleName(role) {
 }
 
 async function saveProfile() {
+  if (!validateProfile(profileData.value, errors.value)) {
+    return
+  }
   try {
     const token =
       await getAccessTokenSilently()
@@ -99,11 +106,8 @@ onMounted(async () => {
 </script>
 
 <template>
-
 <Navbar />
-
 <div class="container mt-5" style="min-height: 60vh;">
-
   <div
     v-if="isLoading"
     class="text-center"
@@ -130,17 +134,14 @@ onMounted(async () => {
       </div>
 
     <div class="card-body text-center">
-
         <img
           :src="user.picture"
           :alt="profileData.name"
           class="profile-avatar"
         >
-
         <h4 class="card-title">
           {{ profileData.name }}
         </h4>
-
         <p class="email">
   {{ profileData.email }}
 </p>
@@ -155,12 +156,22 @@ onMounted(async () => {
     <input
       class="form-control"
       v-model="profileData.firstName"
+      :class="{ 'is-invalid': errors.firstName }"
+      @input="errors.firstName = ''"
     >
+    <div class="invalid-feedback">
+    {{ errors.firstName }}
+    </div>
     <label>Nachname</label>
     <input
       class="form-control"
       v-model="profileData.lastName"
+      :class="{ 'is-invalid': errors.lastName }"
+      @input="errors.lastName = ''"
     >
+      <div class="invalid-feedback">
+      {{ errors.lastName }}
+    </div>
     <label>Adresse</label>
     <input
       class="form-control"

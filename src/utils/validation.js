@@ -86,3 +86,45 @@ export function validateAusschreibung(ausschreibung, errors) {
   return Object.values(errors)
     .every(error => error === '')
 }
+
+export function validateReport(report, errors) {
+
+  errors.grund = ''
+  errors.beschreibung = ''
+
+  if (!report.grund) {
+    errors.grund = 'Bitte einen Meldegrund auswählen'
+  }
+
+  if (!report.beschreibung?.trim()) {
+    errors.beschreibung = 'Bitte eine Beschreibung eingeben'
+  }
+
+  if (
+    report.beschreibung &&
+    report.beschreibung.trim().length < 10
+  ) {
+    errors.beschreibung =
+      'Beschreibung muss mindestens 10 Zeichen haben'
+  }
+
+  return Object.values(errors)
+    .every(error => error === '')
+}
+
+export function validateProfile(profile, errors) {
+
+  errors.firstName = ''
+  errors.lastName = ''
+
+  if (!profile.firstName?.trim()) {
+    errors.firstName = 'Vorname ist erforderlich'
+  }
+
+  if (!profile.lastName?.trim()) {
+    errors.lastName = 'Nachname ist erforderlich'
+  }
+
+  return Object.values(errors)
+    .every(error => error === '')
+}
