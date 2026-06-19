@@ -29,7 +29,18 @@ const ausschreibung = ref({
   imageUrl: ''
 
 })
-
+const errors = ref({
+  animalType: '',
+  petName: '',
+  petAge: '',
+  city: '',
+  postalCode: '',
+  description: '',
+  dateFrom: '',
+  dateTo: '',
+  compensation: '',
+  imageUrl: ''
+})
 const showSuccess = ref(false)
 const showError = ref(false)
 
@@ -42,8 +53,69 @@ onMounted(async () => {
 
 })
 
-async function createAusschreibung() {
+function validate() {
+  errors.value = {
+    animalType: '',
+    petName: '',
+    petAge: '',
+    city: '',
+    postalCode: '',
+    description: '',
+    dateFrom: '',
+    dateTo: '',
+    compensation: '',
+    imageUrl: ''
+  }
+  //Tierart
+  if (!ausschreibung.value.animalType) {
+  errors.value.animalType =
+    'Bitte eine Tierart auswählen'
+  }
+  // Tiername
+  if (!ausschreibung.value.petName.trim()) {
+    errors.value.petName = 'Tiername ist erforderlich'
+  }
+  // Alter
+  if (ausschreibung.value.petAge < 0) {
+    errors.value.petAge = 'Alter darf nicht negativ sein'
+  }
+  // Stadt
+  if (!ausschreibung.value.city.trim()) {
+    errors.value.city = 'Stadt ist erforderlich'
+  }
+  // PLZ
+  if (!ausschreibung.value.postalCode.trim()) {
+  errors.value.postalCode ='Bitte eine Postleitzahl angeben'
+  }
+  if (ausschreibung.value.postalCode &&!/^\d{5}$/.test(ausschreibung.value.postalCode)) {
+    errors.value.postalCode ='PLZ muss aus 5 Ziffern bestehen'
+  }
+  // Beschreibung
+  if (!ausschreibung.value.description ||ausschreibung.value.description.trim().length < 10) {
+    errors.value.description ='Beschreibung muss mindestens 10 Zeichen haben'
+  }
+  if (!ausschreibung.value.compensation) {
+  errors.value.compensation ='Bitte eine Vergütung auswählen'
+  }
+  // Datum
+  if (!ausschreibung.value.dateFrom) {
+    errors.value.dateFrom ='Startdatum erforderlich'
+  }
+  if (!ausschreibung.value.dateTo) {
+    errors.value.dateTo ='Enddatum erforderlich'
+  }
+  if (ausschreibung.value.dateFrom &&ausschreibung.value.dateTo &&
+    ausschreibung.value.dateTo <ausschreibung.value.dateFrom) {
+    errors.value.dateTo ='Enddatum muss nach dem Startdatum liegen'
+  }
+  return Object.values(errors.value)
+    .every(error => error === '')
+}
 
+async function createAusschreibung() {
+  if (!validate()) {
+    return
+  }
   try {
     const token = await getAccessTokenSilently()
     const response = await fetch(url, {
@@ -52,10 +124,8 @@ async function createAusschreibung() {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`
       },
-
       body: JSON.stringify(ausschreibung.value)
     })
-
     if (!response.ok) {
       console.log('Backend Antwort:',response.status)
       throw new Error(
@@ -67,16 +137,13 @@ async function createAusschreibung() {
       showSuccess.value = false
       router.push('/ausschreibungen')
     }, 2000)
-
   }
   catch (error) {
-
     console.error(
       'Fehler beim Erstellen der Ausschreibung:',
       error
     )
     showError.value = true
-
     setTimeout(() => {
       showError.value = false
     }, 2000)
@@ -129,13 +196,13 @@ async function fetchTranslations() {
       </label>
       <select
         class="form-select"
+        :class="{ 'is-invalid': errors.animalType }"
         v-model="ausschreibung.animalType"
-        required
+        @change="errors.animalType = ''"
+      >
       >
       <option
-        disabled
-        value=""
-        >
+        disabled value="">
         Bitte wählen
       </option>
 
@@ -147,6 +214,9 @@ async function fetchTranslations() {
         {{ translations[animal] || animal }}
       </option>
       </select>
+       <div class="invalid-feedback">
+          {{ errors.animalType }}
+        </div>
     </div>
 
     <!-- Tiername -->
@@ -157,9 +227,14 @@ async function fetchTranslations() {
       <input
         type="text"
         class="form-control"
+        :class="{ 'is-invalid': errors.petName }"
         v-model="ausschreibung.petName"
-        required
-      >
+        @input="errors.petName = ''"
+        >
+
+      <div class="invalid-feedback">
+        {{ errors.petName }}
+      </div>
     </div>
 
     <!-- Alter -->
@@ -170,8 +245,13 @@ async function fetchTranslations() {
       <input
         type="number"
         class="form-control"
+        :class="{ 'is-invalid': errors.petAge }"
         v-model="ausschreibung.petAge"
+        @input="errors.petAge = ''"
       >
+      <div class="invalid-feedback">
+        {{ errors.petAge }}
+  </div>
     </div>
 
     <!-- Beschreibung -->
@@ -181,8 +261,14 @@ async function fetchTranslations() {
       </label>
       <textarea
         class="form-control description-box"
-        v-model="ausschreibung.description">
+        :class="{ 'is-invalid': errors.description }"
+        v-model="ausschreibung.description"
+        @input="errors.description = ''"
+      >
       </textarea>
+      <div class="invalid-feedback">
+        {{ errors.description }}
+      </div>
     </div>
 
     <!-- PLZ -->
@@ -193,8 +279,13 @@ async function fetchTranslations() {
       <input
         type="text"
         class="form-control"
+        :class="{ 'is-invalid': errors.postalCode }"
+        @input="errors.postalCode = ''"
         v-model="ausschreibung.postalCode"
       >
+       <div class="invalid-feedback">
+    {{ errors.postalCode }}
+  </div>
     </div>
 
     <!-- Stadt -->
@@ -205,9 +296,13 @@ async function fetchTranslations() {
       <input
         type="text"
         class="form-control"
+        :class="{ 'is-invalid': errors.city }"
         v-model="ausschreibung.city"
-        required
+        @input="errors.city = ''"
       >
+      <div class="invalid-feedback">
+     {{ errors.city }}
+  </div>
     </div>
 
     <!-- Vergütung -->
@@ -217,8 +312,9 @@ async function fetchTranslations() {
       </label>
       <select
         class="form-select"
+        :class="{ 'is-invalid': errors.compensation }"
+        @change="errors.compensation = ''"
         v-model="ausschreibung.compensation"
-        required
       >
         <option value="Tausch">
           Tausch
@@ -227,6 +323,9 @@ async function fetchTranslations() {
           Bezahlung
         </option>
       </select>
+      <div class="invalid-feedback">
+        {{ errors.compensation }}
+      </div>
     </div>
 
     <!-- Bild URL -->
@@ -259,9 +358,13 @@ async function fetchTranslations() {
         <input
           type="date"
           class="form-control"
+          :class="{ 'is-invalid': errors.dateFrom }"
+          @input="errors.dateFrom = ''"
           v-model="ausschreibung.dateFrom"
-          required
         >
+        <div class="invalid-feedback">
+        {{ errors.dateFrom }}
+        </div>
       </div>
       <div class="col-6 mb-4">
         <label class="form-label">
@@ -270,9 +373,13 @@ async function fetchTranslations() {
         <input
           type="date"
           class="form-control"
+          :class="{ 'is-invalid': errors.dateTo }"
+          @input="errors.dateTo = ''"
           v-model="ausschreibung.dateTo"
-          required
         >
+        <div class="invalid-feedback">
+          {{ errors.dateTo }}
+        </div>
       </div>
     </div>
 
