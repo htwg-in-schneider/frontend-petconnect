@@ -186,6 +186,13 @@ Keine passenden Ausschreibungen gefunden.
   box-shadow: 0 0 8px rgba(155,175,150,0.4);
 }
 
+.no-results {
+  text-align: center;
+  margin: 50px;
+  font-size: 1.3rem;
+  color: #777;
+}
+
 @media (max-width: 768px) {
   .filter-bar {
     flex-direction: column;

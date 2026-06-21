@@ -74,7 +74,7 @@ async function deleteMeldung(id) {
 
 <template>
 <Navbar />
-<div class="container py-5">
+<div class="container py-5 ">
   <h1>Gemeldete Profile</h1>
   <div
   v-if="meldungen.length === 0"
@@ -144,6 +144,9 @@ async function deleteMeldung(id) {
 </template>
 
 <style scoped>
+.container {
+  min-height: 70vh;
+}
 .table {
   width: 100%;
 }

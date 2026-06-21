@@ -111,6 +111,9 @@ async function fetchAusschreibungen() {
 </template>
 
 <style scoped>
+.container {
+  min-height: 70vh;
+}
 .no-results {
   text-align: center;
   margin: 50px;
