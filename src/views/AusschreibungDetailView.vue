@@ -66,13 +66,11 @@ const showDeleteSuccess = ref(false)
 const showConfirmDelete = ref(false)
 
 function askDeleteConfirmation() {
-
   showConfirmDelete.value = true
-
 }
+
 function cancelDelete() {
   showConfirmDelete.value = false
-
 }
 
 async function deleteAusschreibung() {

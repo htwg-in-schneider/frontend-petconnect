@@ -27,7 +27,6 @@ onMounted(async () => {
 
 async function loadMessages() {
   const token = await getAccessTokenSilently()
-
   const response =
     await fetch(
       `${import.meta.env.VITE_API_BASE_URL}/api/messages/chat/${route.params.userId}/${route.params.ausschreibungId}`,
@@ -37,7 +36,6 @@ async function loadMessages() {
         }
       }
     )
-
   messages.value =await response.json()
   console.log(messages.value)
   if (messages.value.length > 0) {
@@ -50,7 +48,6 @@ async function loadMessages() {
 
 async function sendMessage() {
   const token =await getAccessTokenSilently()
-
   await fetch(
     `${import.meta.env.VITE_API_BASE_URL}/api/messages`,
     {
@@ -73,7 +70,6 @@ async function sendMessage() {
 
 async function loadCurrentUser() {
   const token = await getAccessTokenSilently()
-
   const response = await fetch(
     `${import.meta.env.VITE_API_BASE_URL}/api/profile`,
     {
@@ -98,16 +94,13 @@ async function loadChatPartner() {
       }
     }
   )
-
   if (response.ok) {
     chatPartner.value = await response.json()
   }
 }
 
 async function sendRequest() {
-  const token =
-    await getAccessTokenSilently()
-
+  const token =await getAccessTokenSilently()
   await fetch(
     `${import.meta.env.VITE_API_BASE_URL}/api/anfragen`,
     {
@@ -126,7 +119,6 @@ async function sendRequest() {
 
 async function acceptRequest(id) {
   const token =await getAccessTokenSilently()
-
   await fetch(
     `${import.meta.env.VITE_API_BASE_URL}/api/anfragen/${id}/accept`,
     {
@@ -141,7 +133,6 @@ async function acceptRequest(id) {
 
 async function rejectRequest(id) {
   const token =await getAccessTokenSilently()
-
   await fetch(
     `${import.meta.env.VITE_API_BASE_URL}/api/anfragen/${id}/reject`,
     {

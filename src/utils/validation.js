@@ -102,10 +102,11 @@ export function validateReport(report, errors) {
 
   if (
     report.beschreibung &&
-    report.beschreibung.trim().length < 10
+    (report.beschreibung.trim().length < 10 || report.beschreibung.trim().length > 500)
+    
   ) {
     errors.beschreibung =
-      'Beschreibung muss mindestens 10 Zeichen haben'
+      'Beschreibung muss mindestens 10 und höchstens 500 Zeichen haben'
   }
 
   return Object.values(errors)
