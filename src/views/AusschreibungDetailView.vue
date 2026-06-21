@@ -56,6 +56,10 @@ onMounted(async () => {
   }
 })
 
+function goBack() {
+  router.back()
+}
+
 const canEdit = computed(() => {
   if (!ausschreibung.value) {
     return false
@@ -192,13 +196,13 @@ async function loadRole() {
   v-if="ausschreibung"
   class="container py-4"
 >
-
-  <router-link
-    to="/ausschreibungen"
-    class="back-link"
-  >
-    ←
-  </router-link>
+    <Button
+    variant="secondary"
+    class="mb-3"
+    @click="goBack"
+    >
+      ← Zurück
+    </Button>
 
   <img
     :src="ausschreibung.imageUrl"

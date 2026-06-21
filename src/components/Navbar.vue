@@ -134,11 +134,6 @@ watch(isAuthenticated, () => {
                             </Button>
                         </RouterLink>
                     </li>
-
-                    <li class="nav-item">
-                        <Button variant="secondary">Über uns</Button>
-                    </li>
-  
                 </ul>
             </div>
         </div>

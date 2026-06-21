@@ -44,14 +44,22 @@ onMounted(() => {
     placeholder="Nach Besitzer oder Tiername suchen..."
     />
 
+  
     <div
-    v-if="filteredAusschreibungen.length === 0"
+    v-if="ausschreibungen.length === 0"
+    class="no-results"
+  >
+    Keine Ausschreibungen vorhanden.
+  </div>
+
+  <div
+    v-else-if="filteredAusschreibungen.length === 0"
     class="no-results"
     >
     Keine passenden Ausschreibungen gefunden.
     </div>
 
-    <table class="table">
+    <table v-else class="table">
     <thead>
     <tr>
         <th>Tier</th>
@@ -100,6 +108,15 @@ onMounted(() => {
 </template>
 
 <style scoped>
+.container{
+  min-height: 70vh;
+}
+.no-results {
+  text-align: center;
+  margin: 50px;
+  font-size: 1.3rem;
+  color: #777;
+}
 .table {
   width: 100%;
 }

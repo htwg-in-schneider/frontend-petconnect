@@ -45,6 +45,11 @@ onMounted(async () => {
   ])
 })
 
+
+function goBack() {
+  router.back()
+}
+
 async function fetchAusschreibung() {
   const ausschreibungId =route.params.id
   try {
@@ -54,11 +59,15 @@ async function fetchAusschreibung() {
         `Ausschreibung nicht gefunden`)
     }
     ausschreibung.value = await response.json()
+    console.log(ausschreibung.value.dateFrom)
+console.log(ausschreibung.value.dateTo)
+    
   } catch (error) {
     console.error(error)
     alert('Ausschreibung konnte nicht geladen werden.')
     router.push('/ausschreibungen')
   }
+  
 }
 
 async function fetchAnimalTypes() {
@@ -133,6 +142,14 @@ function cancelEdit() {
   <h2 class="fw-bold mb-4">
     Ausschreibung bearbeiten
   </h2>
+
+   <Button
+    variant="secondary"
+    class="mb-3"
+    @click="goBack"
+    >
+      ← Zurück
+    </Button>
 
   <form @submit.prevent="updateAusschreibung">
 

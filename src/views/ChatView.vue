@@ -10,7 +10,6 @@ const text = ref('')
 const route = useRoute()
 const chatPartner = ref(null)
 const currentUserId = ref(null)
-const userId = route.params.userId
 const showRequestPopup = ref(false)
 const petName = ref('')
 const ownerId = ref(null)
@@ -25,6 +24,11 @@ onMounted(async () => {
     loadMessages()
   }, 3000)
 })
+
+
+function goBack() {
+  window.history.back()
+}
 
 async function loadMessages() {
   const token = await getAccessTokenSilently()
@@ -170,6 +174,12 @@ onUnmounted(() => {
 
   <!-- Kopfbereich mit Chatpartner -->
   <div class="chat-header">
+    <Button
+    variant="secondary"
+    @click="goBack"
+    >
+      ❮
+    </Button>
     <img
       class="chat-avatar"
       src="../assets/images/User_Icon_Green.png"
