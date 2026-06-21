@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuth0 } from '@auth0/auth0-vue'
 import Button from '@/components/Button.vue'
@@ -14,6 +14,7 @@ const showRequestPopup = ref(false)
 const petName = ref('')
 const ownerId = ref(null)
 let refreshInterval = null
+const messagesContainer = ref(null)
 
 onMounted(async () => {
   await loadMessages()
@@ -83,7 +84,8 @@ async function sendMessage() {
     }
   )
   text.value = ''
-  loadMessages()
+  await loadMessages()
+  scrollToBottom()
 }
 
 async function loadCurrentUser() {
@@ -163,6 +165,16 @@ async function rejectRequest(id) {
   loadMessages()
 }
 
+async function scrollToBottom() {
+  await nextTick()
+  if (messagesContainer.value) {
+    messagesContainer.value.scrollTo({
+  top: messagesContainer.value.scrollHeight,
+  behavior: 'smooth'
+})
+  }
+}
+
 onUnmounted(() => {
   clearInterval(refreshInterval)
 })
@@ -198,7 +210,9 @@ onUnmounted(() => {
   </div>
 
   <!-- Nachrichtenbereich -->
-  <div class="messages-container">
+  <div 
+   ref="messagesContainer"
+  class="messages-container">
     <div
       v-for="message in messages"
       :key="message.id"

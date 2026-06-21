@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router';
 import Button from '@/components/Button.vue'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
+import Popup from '@/components/Popup.vue';
 import { useAuth0 } from '@auth0/auth0-vue'
 import { validateAusschreibung } from '@/utils/validation'
 
@@ -335,17 +336,17 @@ async function fetchTranslations() {
         </Button>
     </div>
 
+  <Popup
+  v-if="showSuccess"
+  type="success"
+  text="Ausschreibung erstellt!"
+  />
 
-    <div v-if="showSuccess" class="success-popup">
-  Ausschreibung erstellt!
-</div>
-
-<div v-if="showError" class="error-popup">
-  Ausschreibung konnte nicht erstellt werden!
-</div>
-
-
-
+  <Popup
+  v-if="showError"
+  type="error-popup"
+  text="Ausschreibung konnte nicht erstellt werden!""
+  />
   </form>
 </div>
 
@@ -378,47 +379,6 @@ async function fetchTranslations() {
     flex-direction: row;
     gap: 40px;
     justify-content: center;
-}
-
-.success-popup,
-.error-popup {
-
-  position: fixed;
-
-  top: 50%;
-  left: 50%;
-
-  transform: translate(-50%, -50%);
-
-  padding: 40px 70px;
-
-  border-radius: 25px;
-
-  color: white;
-
-  font-size: 2rem;
-  font-weight: bold;
-
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-
-  z-index: 9999;
-
-  text-align: center;
-
-  min-width: 400px;
-
-}
-
-.success-popup {
-
-  background-color: #9BAF96;
-
-}
-
-.error-popup {
-
-  background-color: #D0A6A6;
-
 }
 
 </style>

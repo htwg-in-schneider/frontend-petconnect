@@ -5,7 +5,7 @@ import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import Button from '@/components/Button.vue'
 import ConfirmPopup from '@/components/ConfirmPopup.vue'
-import SuccessPopup from '@/components/SuccessPopup.vue'
+import Popup from '@/components/Popup.vue'
 import { useAuth0 } from '@auth0/auth0-vue'
 
 const { getAccessTokenSilently } = useAuth0()
@@ -133,8 +133,9 @@ async function deleteMeldung(id) {
         @cancel="cancelDelete"
         />
 
-        <SuccessPopup
+        <Popup
         v-if="showDeleteSuccess"
+        type="success"
          title="Meldung gelöscht"
         text="Die Meldung wurde erfolgreich entfernt."
         />

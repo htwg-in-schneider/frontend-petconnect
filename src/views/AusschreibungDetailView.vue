@@ -10,7 +10,7 @@ import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import Button from '@/components/Button.vue'
 import ConfirmPopup from '@/components/ConfirmPopup.vue'
-import SuccessPopup from '@/components/SuccessPopup.vue'
+import Popup from '@/components/Popup.vue'
 import AusschreibungReview from '@/components/AusschreibungReview.vue'
 import ReportPopup from '@/components/ReportPopup.vue'
 import { useAuth0 } from '@auth0/auth0-vue'
@@ -320,8 +320,9 @@ async function loadRole() {
 <ReviewForm/>
 <Footer />
 
-<SuccessPopup
+<Popup
   v-if="showDeleteSuccess"
+  type="success"
   text="Anzeige erfolgreich gelöscht!"
 />
 
@@ -344,8 +345,9 @@ async function loadRole() {
   @clear-beschreibung-error="reportErrors.beschreibung = ''"
 />
 
-<SuccessPopup
+<Popup
   v-if="showReportSuccess"
+  type="success"
   title="Meldung erstellt"
   text="Meldung wurde erstellt!"
 />

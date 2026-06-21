@@ -2,10 +2,12 @@
 
 import { useAuth0 } from '@auth0/auth0-vue'
 import { onMounted, ref } from 'vue'
-
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
+import Button from '@/components/Button.vue'
+import Popup from '@/components/Popup.vue'
 import {validateProfile} from '@/utils/validation'
+
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
 const {
@@ -24,6 +26,34 @@ const errors = ref({
   firstName: '',
   lastName: '',
 })
+
+onMounted(async () => {
+  if (isAuthenticated.value) {
+    try {
+      const token = await getAccessTokenSilently()
+      bearerToken.value = token
+      const response = await fetch(`${baseUrl}/api/profile`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      if (response.ok) {
+        profileData.value = await response.json()
+      } else {
+        error.value =
+          `Fehler beim Laden des Profils: ${response.status} ${response.statusText}`
+      }
+    } catch (e) {
+      error.value =
+        `Fehler beim Laden des Profils: ${e.message}`
+      console.warn('Could not load profile:', e)
+    }
+  }
+})
+
+function goBack() {
+  window.history.back()
+}
 
 function copyToClipboard(event) {
   event.target.select()
@@ -80,33 +110,17 @@ async function saveProfile() {
   }
 }
 
-onMounted(async () => {
-  if (isAuthenticated.value) {
-    try {
-      const token = await getAccessTokenSilently()
-      bearerToken.value = token
-      const response = await fetch(`${baseUrl}/api/profile`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      if (response.ok) {
-        profileData.value = await response.json()
-      } else {
-        error.value =
-          `Fehler beim Laden des Profils: ${response.status} ${response.statusText}`
-      }
-    } catch (e) {
-      error.value =
-        `Fehler beim Laden des Profils: ${e.message}`
-      console.warn('Could not load profile:', e)
-    }
-  }
-})
 </script>
 
 <template>
 <Navbar />
+<Button
+variant="secondary"
+class="mt-3"
+@click="goBack"
+>
+  ← Zurück
+</Button>
 <div class="container mt-5" style="min-height: 60vh;">
   <div
     v-if="isLoading"
@@ -242,19 +256,17 @@ onMounted(async () => {
 
   </div>
 
-  <div
+  <Popup
   v-if="showSaveSuccess"
-  class="success-popup"
->
-  Profil erfolgreich gespeichert!
-</div>
+  type="success"
+  text="Profil erfolgreich gespeichert!"
+  />
 
-<div
+<Popup
   v-if="showSaveError"
-  class="error-popup"
->
-  Fehler beim Speichern!
-</div>
+  type="error-popup"
+  text="Fehler beim Speichern!"
+/>
 
 </div>
 
