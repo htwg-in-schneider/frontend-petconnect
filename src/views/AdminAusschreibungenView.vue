@@ -57,6 +57,7 @@ onMounted(() => {
         <th>Tier</th>
         <th>Ort</th>
         <th>Besitzer</th>
+        <th>Status</th>
         <th></th>
     </tr>
     </thead>
@@ -77,6 +78,10 @@ onMounted(() => {
         <td data-label="Besitzer">
             {{ a.owner?.firstName }}
             {{ a.owner?.lastName }}
+        </td>
+
+        <td data-label="Status">
+        {{ a.status }}
         </td>
 
         <td data-label="Aktion">

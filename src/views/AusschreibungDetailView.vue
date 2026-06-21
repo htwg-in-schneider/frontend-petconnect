@@ -9,7 +9,10 @@ import {
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import Button from '@/components/Button.vue'
+import ConfirmPopup from '@/components/ConfirmPopup.vue'
+import SuccessPopup from '@/components/SuccessPopup.vue'
 import AusschreibungReview from '@/components/AusschreibungReview.vue'
+import ReportPopup from '@/components/ReportPopup.vue'
 import { useAuth0 } from '@auth0/auth0-vue'
 import ReviewForm from '@/components/ReviewForm.vue'
 import { validateReport } from '@/utils/validation'
@@ -20,6 +23,8 @@ const ausschreibung = ref(null)
 const translations = ref({})
 const { isAuthenticated, getAccessTokenSilently } = useAuth0()
 const showReportPopup = ref(false)
+const showReportSuccess = ref(false)
+
 
 const report = ref({
   grund: '',
@@ -132,6 +137,10 @@ async function sendReport() {
       console.log(text)
     }
     showReportPopup.value = false
+    showReportSuccess.value = true
+    setTimeout(() => {
+  showReportSuccess.value = false
+}, 2000)
   } catch (error) {
     console.error(error)
   }
@@ -307,90 +316,35 @@ async function loadRole() {
 <ReviewForm/>
 <Footer />
 
-<div
+<SuccessPopup
   v-if="showDeleteSuccess"
-  class="success-popup"
->
-  Anzeige erfolgreich gelöscht!
-</div>
+  text="Anzeige erfolgreich gelöscht!"
+/>
 
-<div
+<ConfirmPopup
   v-if="showConfirmDelete"
-  class="confirm-popup">
-  <p>
-    Möchtest du die Anzeige wirklich löschen?
-  </p>
-  <div class="confirm-buttons">
-    <Button
-      variant="secondary"
-      @click="deleteAusschreibung">
-    Ja
-    </Button>
-    <Button
-      variant="accent"
-      @click="cancelDelete">
-    Nein
-    </Button>
-  </div>
-</div>
+  text="Möchtest du die Anzeige wirklich löschen?"
+  @confirm="deleteAusschreibung"
+  @cancel="cancelDelete"
+/>
+
 
 <!-- Account melden -->
-<div
+<ReportPopup
   v-if="showReportPopup"
-  class="confirm-popup"
->
-  <h3>Benutzer melden</h3>
-  <select
-    v-model="report.grund"
-    class="form-control mb-3"
-    :class="{ 'is-invalid': reportErrors.grund }"
-    @change="reportErrors.grund = ''"
-  >
-  <div class="invalid-feedback d-block">
-  {{ reportErrors.grund }}
-  </div>
-    <option value="">
-      Bitte wählen
-    </option>
-    <option value="Unangemessener Inhalt">
-      Unangemessener Inhalt
-    </option>
-    <option value="Spam">
-      Spam
-    </option>
-    <option value="Beleidigung">
-      Beleidigung
-    </option>
-  </select>
-  <textarea
-    v-model="report.beschreibung"
-    class="form-control mb-3"
-    :class="{ 'is-invalid': reportErrors.beschreibung }"
-    @input="reportErrors.beschreibung = ''"
-    placeholder="Beschreibung"
-  />
-  <div class="invalid-feedback d-block">
-    {{ reportErrors.beschreibung }}
-  </div>
+  :report="report"
+  :report-errors="reportErrors"
+  @submit="sendReport"
+  @cancel="showReportPopup = false"
+  @clear-grund-error="reportErrors.grund = ''"
+  @clear-beschreibung-error="reportErrors.beschreibung = ''"
+/>
 
-  <div class="confirm-buttons">
-    <Button
-      variant="accent"
-      @click="sendReport"
-    >
-      Melden
-    </Button>
-    <Button
-      variant="secondary"
-      @click="showReportPopup = false"
-    >
-      Abbrechen
-    </Button>
-
-  </div>
-</div>
-
-
+<SuccessPopup
+  v-if="showReportSuccess"
+  title="Meldung erstellt"
+  text="Meldung wurde erstellt!"
+/>
 
 </template>
 
@@ -447,6 +401,7 @@ async function loadRole() {
     gap: 40px;
     justify-content: center;
 }
+
 .owner-buttons {
   display: flex;
   gap: 15px;
@@ -455,46 +410,6 @@ async function loadRole() {
 
 .owner-buttons > * {
   flex: 1;
-}
-
-.success-popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 40px 70px;
-  border-radius: 25px;
-  color: white;
-  font-size: 2rem;
-  font-weight: bold;
-  background-color: #9BAF96;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  z-index: 9999;
-  text-align: center;
-  min-width: 400px;
-
-}
-.confirm-popup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  padding: 40px;
-  border-radius: 25px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  z-index: 9999;
-  text-align: center;
-  min-width: 400px;
-}
-.confirm-popup p {
-font-size: 1.5rem;
- margin-bottom: 30px;
-}
-.confirm-buttons {
-display: flex;
-justify-content: center;
-gap: 20px;
 }
 
 .owner-card {

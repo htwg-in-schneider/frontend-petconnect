@@ -20,6 +20,7 @@ onMounted(async () => {
   await loadMessages()
   await loadCurrentUser()
   await loadChatPartner()
+  await loadAusschreibung()
   refreshInterval = setInterval(() => {
     loadMessages()
   }, 3000)
@@ -44,6 +45,19 @@ async function loadMessages() {
     ownerId.value =
     messages.value[0].ausschreibung.owner.id
 }
+}
+
+async function loadAusschreibung() {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_BASE_URL}/api/ausschreibungen/${route.params.ausschreibungId}`
+  )
+
+  if (response.ok) {
+    const ausschreibung = await response.json()
+
+    petName.value = ausschreibung.petName
+    ownerId.value = ausschreibung.owner.id
+  }
 }
 
 async function sendMessage() {
@@ -255,6 +269,7 @@ onUnmounted(() => {
     >
     <Button 
       variant="secondary"
+       :disabled="!text.trim()"
       @click="sendMessage">
         Senden
     </Button>
