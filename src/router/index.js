@@ -15,6 +15,7 @@ import AdminAusschreibungenView from '@/views/AdminAusschreibungenView.vue'
 import AdminMeldungenView from '@/views/AdminMeldungenView.vue'
 import ChatView from '@/views/ChatView.vue'
 import MeineNachrichtenView from '@/views/MeineNachrichtenView.vue'
+import MeineBewertungenView from '@/views/MeineBewertungenView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -68,7 +69,6 @@ const router = createRouter({
     name: 'profile',
     component: ProfileView
     },
-
     {
     path: '/profile',
     name: 'profile',
@@ -113,6 +113,12 @@ const router = createRouter({
       name: 'meine-nachrichten',
       component: MeineNachrichtenView,
       beforeEnter: authGuard
+    },
+    {
+    path: '/meine-bewertungen',
+    name: 'meine-bewertungen',
+    component: MeineBewertungenView,
+    beforeEnter: authGuard
     }
   ],
 })

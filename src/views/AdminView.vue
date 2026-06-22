@@ -11,13 +11,21 @@ const search = ref('')
 const selectedUser = ref(null)
 const showEditPopup = ref(false)
 const { getAccessTokenSilently } = useAuth0()
+const userRatings = ref({})
 
+async function fetchAverageRating(userId) {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_BASE_URL}/api/review/user/${userId}/average`
+  )
+  if (response.ok) {
+    const avg = await response.json()
+    userRatings.value[userId] = avg
+  }
+}
 
 async function fetchUsers() {
-  const token =
-    await getAccessTokenSilently()
-  const response =
-    await fetch(
+  const token =await getAccessTokenSilently()
+  const response =await fetch(
       `${import.meta.env.VITE_API_BASE_URL}/api/users`,
       {
       headers: {
@@ -30,6 +38,9 @@ async function fetchUsers() {
     throw new Error(`HTTP Error ${response.status}`)
     }
   users.value = await response.json()
+  // Bewertungen für alle User laden
+  await Promise.all(
+    users.value.map(u => fetchAverageRating(u.id)))
 }
 
 function editUser(user) {
@@ -105,6 +116,8 @@ Keine passenden Accounts gefunden.
       <th>Name</th>
       <th>Email</th>
       <th>Rolle</th>
+      <th>Bewertung</th>
+      <th>Aktion</th>
     </tr>
   </thead>
 
@@ -118,6 +131,15 @@ Keine passenden Accounts gefunden.
       <td data-label="Name">{{ user.firstName }} {{user.lastName}}</td>
       <td data-label="E-Mail">{{ user.email }}</td>
       <td data-label="Rolle">{{ user.role }}</td>
+      <td data-label="Bewertung">
+      <span
+        v-if="userRatings[user.id] && userRatings[user.id] > 0"
+        class="rating-badge"
+      >
+        ★ {{ userRatings[user.id].toFixed(1) }}
+      </span>
+      <span v-else class="no-rating">–</span>
+      </td>
     
     <td data-label="Aktion">
         <Button
@@ -207,6 +229,20 @@ Keine passenden Accounts gefunden.
   justify-content: center;
   gap: 20px;
   margin-top: 20px;
+}
+
+.rating-badge {
+  background: #fff4d6;
+  color: #a97900;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.no-rating {
+  color: #bbb;
+  font-size: 1.1rem;
 }
 
 @media (max-width: 768px) {

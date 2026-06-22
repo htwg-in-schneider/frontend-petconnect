@@ -66,6 +66,7 @@ onMounted(() => {
         <th>Ort</th>
         <th>Besitzer</th>
         <th>Status</th>
+        <th>Aktion</th>
         <th></th>
     </tr>
     </thead>

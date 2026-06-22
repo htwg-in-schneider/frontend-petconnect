@@ -9,10 +9,8 @@ import AusschreibungCard from '@/components/AusschreibungCard.vue'
 
 const url = `${import.meta.env.VITE_API_BASE_URL}/api/ausschreibungen`;
 const animalTypeUrl = `${import.meta.env.VITE_API_BASE_URL}/api/animaltype`
-
 const animalTypes = ref([])
 const translations = ref({})
-
 const ausschreibungen = ref([])
 const search = ref('') /*suchleiste*/
 const filterAnimal = ref('') /*filter für tierart*/
@@ -52,6 +50,7 @@ async function fetchTranslations() {
   
   const filteredAusschreibungen = computed(() => {
   return ausschreibungen.value.filter(a => {
+     if (a.status !== 'VERFUEGBAR') return false
 
     const searchText = search.value.toLowerCase()
     const matchesSearch =

@@ -20,12 +20,14 @@ const messagesContainer = ref(null)
 const ausschreibung = ref(null)
 const showReviewPopup = ref(false)
 const showSuccessPopup = ref(false)
+const hasReviewed = ref(false)
 
 onMounted(async () => {
   await loadMessages()
   await loadCurrentUser()
   await loadChatPartner()
   await loadAusschreibung()
+  await loadHasReviewed()
   refreshInterval = setInterval(() => {
     loadMessages()
   }, 3000)
@@ -36,10 +38,23 @@ function goBack() {
   window.history.back()
 }
 
+async function loadHasReviewed() {
+  if (!ausschreibung.value || !currentUserId.value) return
+  const response = await fetch(
+    `${import.meta.env.VITE_API_BASE_URL}/api/review/ausschreibung/${route.params.ausschreibungId}`
+  )
+  if (response.ok) {
+    const reviews = await response.json()
+    hasReviewed.value = reviews.some(
+      r => r.reviewer.id === currentUserId.value
+    )
+  }
+}
+
 function reviewSubmitted() {
   showReviewPopup.value = false
   showSuccessPopup.value = true
-
+  hasReviewed.value = true
   setTimeout(() => {
     showSuccessPopup.value = false
   }, 3000)
@@ -319,7 +334,7 @@ class="mt-3"
     (
       currentUserId === ausschreibung.owner.id ||
       currentUserId === ausschreibung.betreuer?.id
-    )
+    ) && !hasReviewed
   "
 >
   <Button
@@ -330,7 +345,7 @@ class="mt-3"
   </Button>
 </div>
 
-      <div
+      <div class="mt-3"
         v-if="
         message.anfrage.status === 'OFFEN' &&
         currentUserId === message.receiver.id"
@@ -422,16 +437,8 @@ class="mt-3"
   :reviewed-user-id="getReviewedUserId()"
   :ausschreibung-id="ausschreibung.id"
   @submitted="reviewSubmitted"
+  @close="showReviewPopup = false"
 />
-
-  <div class="confirm-buttons">
-    <Button
-      variant="secondary"
-      @click="showReviewPopup = false"
-    >
-      Schließen
-    </Button>
-  </div>
 </div>
 
 <Popup

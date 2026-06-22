@@ -23,7 +23,8 @@ const translations = ref({})
 const { isAuthenticated, getAccessTokenSilently } = useAuth0()
 const showReportPopup = ref(false)
 const showReportSuccess = ref(false)
-
+const ownerAverageRating = ref(null)
+const ownerReviewCount = ref(0)
 
 const report = ref({
   grund: '',
@@ -49,6 +50,7 @@ onMounted(async () => {
     }
 
     ausschreibung.value = await response.json();
+    await loadOwnerRating()
     console.log(ausschreibung.value);
   } catch (error) {
     console.error('Fehler beim Laden:', error)
@@ -184,6 +186,23 @@ async function loadRole() {
     console.error(error)
   }
 }
+
+async function loadOwnerRating() {
+  if (!ausschreibung.value?.owner?.id) return
+  const response = await fetch(
+    `${import.meta.env.VITE_API_BASE_URL}/api/review/user/${ausschreibung.value.owner.id}/average`
+  )
+  if (response.ok) {
+    ownerAverageRating.value = await response.json()
+  }
+  const reviewsResponse = await fetch(
+    `${import.meta.env.VITE_API_BASE_URL}/api/review/user/${ausschreibung.value.owner.id}`
+  )
+  if (reviewsResponse.ok) {
+    const reviews = await reviewsResponse.json()
+    ownerReviewCount.value = reviews.length
+  }
+}
 </script>
 
 <template>
@@ -272,6 +291,13 @@ async function loadRole() {
       <div class="owner-name">
         {{ ausschreibung.owner?.firstName }}
       </div>
+      <div class="owner-rating" v-if="ownerAverageRating !== null">
+  <span class="rating-stars">★ {{ ownerAverageRating.toFixed(1) }}</span>
+  <span class="rating-count">({{ ownerReviewCount }} Bewertung{{ ownerReviewCount !== 1 ? 'en' : '' }})</span>
+</div>
+<div class="owner-rating" v-else>
+  <span class="rating-count">Noch keine Bewertungen</span>
+</div>
     </div>
   </div>
 
@@ -446,6 +472,24 @@ async function loadRole() {
 .message-link {
   display: block;
   width: 250px;
+}
+
+.owner-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.rating-stars {
+  color: #e8c547;
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.rating-count {
+  color: #888;
+  font-size: 0.95rem;
 }
 
 </style>

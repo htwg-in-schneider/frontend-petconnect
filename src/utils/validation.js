@@ -129,3 +129,18 @@ export function validateProfile(profile, errors) {
   return Object.values(errors)
     .every(error => error === '')
 }
+
+export function validateReview(review, errors) {
+  errors.rating = ''
+  errors.comment = ''
+
+  if (!review.rating || review.rating === 0) {
+    errors.rating = 'Bitte wähle eine Sternebewertung'
+  }
+
+  if (!review.comment?.trim()) {
+    errors.comment = 'Bitte schreibe einen Kommentar'
+  }
+
+  return Object.values(errors).every(error => error === '')
+}
