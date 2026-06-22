@@ -4,6 +4,10 @@ import {ref} from 'vue'
 const name = ref('')
 const comment= ref('')
 const rating = ref(0)
+const probs = defineProps({
+  reviewerId: Number,
+  reviewedUserId: Number
+})
 
 function setRating(value){
     rating.value=value
@@ -12,12 +16,25 @@ function setRating(value){
 async function submitReview(){
 
     const review={
-        name:name.value,
-        comment:comment.value,
-        rating:rating.value
+        stars:rating.value,
+        text:comment.value,
+        reviewer: {
+          id:props.reviewerId
+        },
+        reviewedUser : {
+          id:props.reviewedUserId
+        }
     }
     console.log(review)
     // noch an backend geben!!!!!!
+    await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/review`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(review)
+    })
+
 }
 </script>
 
@@ -25,9 +42,7 @@ async function submitReview(){
 <div class="review-box">
 <h3> Bewertung abgeben</h3>
 
-<label> Dein Name </label>
-<input
-v-model="name"
+
 class="review-input">
  <label>Bewertung</label>
 
