@@ -14,7 +14,6 @@ import Popup from '@/components/Popup.vue'
 import AusschreibungReview from '@/components/AusschreibungReview.vue'
 import ReportPopup from '@/components/ReportPopup.vue'
 import { useAuth0 } from '@auth0/auth0-vue'
-import ReviewForm from '@/components/ReviewForm.vue'
 import { validateReport } from '@/utils/validation'
 
 const route = useRoute()
@@ -317,7 +316,7 @@ async function loadRole() {
 
 <AusschreibungReview :ausschreibungId="route.params.id"
 />
-<ReviewForm/>
+
 <Footer />
 
 <Popup

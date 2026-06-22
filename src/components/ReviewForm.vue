@@ -1,40 +1,41 @@
 <script setup>
 import {ref} from 'vue'
+import { useAuth0 } from '@auth0/auth0-vue'
 
-const name = ref('')
+const { getAccessTokenSilently } = useAuth0()
 const comment= ref('')
 const rating = ref(0)
-const probs = defineProps({
-  reviewerId: Number,
-  reviewedUserId: Number
+const props = defineProps({
+  reviewedUserId: Number,
+  ausschreibungId: Number
 })
+const emit = defineEmits(['submitted'])
 
 function setRating(value){
     rating.value=value
 }
 
-async function submitReview(){
-
-    const review={
-        stars:rating.value,
-        text:comment.value,
-        reviewer: {
-          id:props.reviewerId
-        },
-        reviewedUser : {
-          id:props.reviewedUserId
-        }
+async function submitReview() {
+  const token = await getAccessTokenSilently()
+  const response =await fetch(
+    `${import.meta.env.VITE_API_BASE_URL}/api/review`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        stars: rating.value,
+        text: comment.value,
+        reviewedUserId: props.reviewedUserId,
+        ausschreibungId: props.ausschreibungId
+      })
     }
-    console.log(review)
-    // noch an backend geben!!!!!!
-    await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/review`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(review)
-    })
-
+  )
+   if (response.ok) {
+    emit('submitted')
+}
 }
 </script>
 

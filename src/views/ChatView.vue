@@ -3,6 +3,8 @@ import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuth0 } from '@auth0/auth0-vue'
 import Button from '@/components/Button.vue'
+import ReviewForm from '@/components/ReviewForm.vue'
+import Popup from '@/components/Popup.vue'
 
 const { getAccessTokenSilently } = useAuth0()
 const messages = ref([])
@@ -15,6 +17,9 @@ const petName = ref('')
 const ownerId = ref(null)
 let refreshInterval = null
 const messagesContainer = ref(null)
+const ausschreibung = ref(null)
+const showReviewPopup = ref(false)
+const showSuccessPopup = ref(false)
 
 onMounted(async () => {
   await loadMessages()
@@ -29,6 +34,15 @@ onMounted(async () => {
 
 function goBack() {
   window.history.back()
+}
+
+function reviewSubmitted() {
+  showReviewPopup.value = false
+  showSuccessPopup.value = true
+
+  setTimeout(() => {
+    showSuccessPopup.value = false
+  }, 3000)
 }
 
 async function loadMessages() {
@@ -58,10 +72,10 @@ async function loadAusschreibung() {
   )
 
   if (response.ok) {
-    const ausschreibung = await response.json()
+    ausschreibung.value = await response.json()
 
-    petName.value = ausschreibung.petName
-    ownerId.value = ausschreibung.owner.id
+  petName.value = ausschreibung.value.petName
+  ownerId.value = ausschreibung.value.owner.id
   }
 }
 
@@ -165,6 +179,36 @@ async function rejectRequest(id) {
   loadMessages()
 }
 
+async function completeBetreuung() {
+  const token = await getAccessTokenSilently()
+  await fetch(
+     `${import.meta.env.VITE_API_BASE_URL}/api/ausschreibungen/${route.params.ausschreibungId}/complete`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  )
+  await loadAusschreibung()
+}
+
+function getReviewedUserId() {
+
+  if (!ausschreibung.value) {
+    return null
+  }
+
+  if (
+    currentUserId.value ===
+    ausschreibung.value.owner.id
+  ) {
+    return ausschreibung.value.betreuer?.id
+  }
+
+  return ausschreibung.value.owner.id
+}
+
 async function scrollToBottom() {
   await nextTick()
   if (messagesContainer.value) {
@@ -254,6 +298,38 @@ onUnmounted(() => {
       >
         {{ message.anfrage.status }}
       </div>
+<div
+class="mt-3"
+  v-if="
+    message.anfrage.status === 'ANGENOMMEN' &&
+    ausschreibung?.status !== 'ABGESCHLOSSEN' &&
+    currentUserId === ownerId"
+>
+  <Button
+    variant="accent"
+    @click="completeBetreuung"
+  >
+    Betreuung abgeschlossen
+  </Button>
+</div>
+<div
+class="mt-3"
+  v-if="
+    ausschreibung?.status === 'ABGESCHLOSSEN' &&
+    (
+      currentUserId === ausschreibung.owner.id ||
+      currentUserId === ausschreibung.betreuer?.id
+    )
+  "
+>
+  <Button
+    variant="accent"
+    @click="showReviewPopup = true"
+  >
+    Bewertung schreiben
+  </Button>
+</div>
+
       <div
         v-if="
         message.anfrage.status === 'OFFEN' &&
@@ -273,9 +349,16 @@ onUnmounted(() => {
             Ablehnen
           </Button>
       </div>
+
+ 
     </div>
+    
   </div>
+
+  
 </div>
+
+
 
   <!-- Eingabebereich -->
   <div class="chat-input">
@@ -330,6 +413,32 @@ onUnmounted(() => {
     </Button>
   </div>
 </div>
+
+<div
+  v-if="showReviewPopup"
+  class="confirm-popup"
+>
+  <ReviewForm
+  :reviewed-user-id="getReviewedUserId()"
+  :ausschreibung-id="ausschreibung.id"
+  @submitted="reviewSubmitted"
+/>
+
+  <div class="confirm-buttons">
+    <Button
+      variant="secondary"
+      @click="showReviewPopup = false"
+    >
+      Schließen
+    </Button>
+  </div>
+</div>
+
+<Popup
+  v-if="showSuccessPopup"
+  text="Bewertung erfolgreich gespeichert!"
+  type="success"
+/>
 </template>
 
 <style scoped>
