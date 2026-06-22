@@ -11,7 +11,6 @@ import Footer from '@/components/Footer.vue'
 import Button from '@/components/Button.vue'
 import ConfirmPopup from '@/components/ConfirmPopup.vue'
 import Popup from '@/components/Popup.vue'
-import AusschreibungReview from '@/components/AusschreibungReview.vue'
 import ReportPopup from '@/components/ReportPopup.vue'
 import { useAuth0 } from '@auth0/auth0-vue'
 import { validateReport } from '@/utils/validation'
@@ -102,7 +101,11 @@ async function deleteAusschreibung() {
     showDeleteSuccess.value = true
     setTimeout(() => {
     showDeleteSuccess.value = false
+    if (role.value === 'ADMIN') {
+        router.push('/admin/ausschreibungen')
+    } else {
     router.push('/ausschreibungen')
+    }
   }, 2000)
   }
   catch (error) {
@@ -339,9 +342,6 @@ async function loadOwnerRating() {
 </Button>
   </div>
 </section>
-
-<AusschreibungReview :ausschreibungId="route.params.id"
-/>
 
 <Footer />
 

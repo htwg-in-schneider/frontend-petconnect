@@ -152,7 +152,7 @@ function handleUploadClick() {
     </div>
 
     <div class="review">
-      <p>"“Durch PetConnect habe ich eine neue Freundin gefunden. 
+      <p>"Durch PetConnect habe ich eine neue Freundin gefunden. 
         Ein Wochenende nehme ich ihre Hündin Paula zu mir, ein anderes Wochenende nimmt sie meine Hündin Mia zu sich 
         - und ab und zu ist noch Zeit für ein Kaffee !”</p>
       <small>~ Rebecca, 26 aus Berlin</small>

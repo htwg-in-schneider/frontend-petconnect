@@ -5,6 +5,7 @@ import { ref, onMounted, computed } from 'vue'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import SearchBar from '@/components/SearchBar.vue'
+import Button from '@/components/Button.vue'
 import AusschreibungCard from '@/components/AusschreibungCard.vue'
 
 const url = `${import.meta.env.VITE_API_BASE_URL}/api/ausschreibungen`;
@@ -16,8 +17,6 @@ const search = ref('') /*suchleiste*/
 const filterAnimal = ref('') /*filter für tierart*/
 const filterCompensation = ref('')
 
-
-
 onMounted(async () => {
  await Promise.all([
     fetchAusschreibungen(),
@@ -25,6 +24,10 @@ onMounted(async () => {
     fetchTranslations()
   ])
 })
+
+function goBack() {
+  window.history.back()
+}
 
 async function fetchAnimalTypes() {
   try {
@@ -94,9 +97,15 @@ try {
 
 <section class="container py-5">
 
+  <Button
+    variant="secondary"
+    class="mb-3"
+    @click="goBack"
+    >
+      ← Zurück
+    </Button>
  <h1 class="text-center fw-bold mb-4">
   Ausschreibungen
-
 </h1>
 
  <SearchBar

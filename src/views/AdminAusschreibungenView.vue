@@ -5,9 +5,16 @@ import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import Button from '@/components/Button.vue'
 import SearchBar from '@/components/SearchBar.vue'
+import ConfirmPopup from '@/components/ConfirmPopup.vue'
+import Popup from '@/components/Popup.vue'
+import { useAuth0 } from '@auth0/auth0-vue'
 
+const { getAccessTokenSilently } = useAuth0()
 const ausschreibungen = ref([])
 const search = ref('')
+const selectedId = ref(null)
+const showConfirmDelete = ref(false)
+const showDeleteSuccess = ref(false)
 
 async function fetchAusschreibungen() {
   const response = await fetch(
@@ -29,6 +36,34 @@ const filteredAusschreibungen = computed(() => {
   })
 })
 
+function askDeleteConfirmation(id) {
+  selectedId.value = id
+  showConfirmDelete.value = true
+}
+
+function cancelDelete() {
+  showConfirmDelete.value = false
+}
+
+async function deleteAusschreibung(id) {
+  showConfirmDelete.value = false
+  const token = await getAccessTokenSilently()
+  const response = await fetch(
+    `${import.meta.env.VITE_API_BASE_URL}/api/ausschreibungen/${id}`,
+    {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  )
+  if (response.ok) {
+    await fetchAusschreibungen()
+    showDeleteSuccess.value = true
+    setTimeout(() => { showDeleteSuccess.value = false }, 2000)
+  }
+}
+
 onMounted(() => {
   fetchAusschreibungen()
 })
@@ -44,7 +79,6 @@ onMounted(() => {
     placeholder="Nach Besitzer oder Tiername suchen..."
     />
 
-  
     <div
     v-if="ausschreibungen.length === 0"
     class="no-results"
@@ -66,7 +100,8 @@ onMounted(() => {
         <th>Ort</th>
         <th>Besitzer</th>
         <th>Status</th>
-        <th>Aktion</th>
+        <th>Bearbeiten</th>
+        <th>Löschen</th>
         <th></th>
     </tr>
     </thead>
@@ -100,11 +135,30 @@ onMounted(() => {
                 </Button>
             </RouterLink>
         </td>
+        <td data-label="Löschen">
+          <Button
+            variant="secondary"
+            @click="askDeleteConfirmation(a.id)"
+          >
+            Löschen
+          </Button>
+        </td>
         </tr>
     </tbody>
     </table>
     </div>
 
+<ConfirmPopup
+  v-if="showConfirmDelete"
+  text="Möchtest du diese Ausschreibung wirklich löschen?"
+  @confirm="deleteAusschreibung(selectedId)"
+  @cancel="cancelDelete"
+/>
+<Popup
+  v-if="showDeleteSuccess"
+  type="success"
+  text="Ausschreibung erfolgreich gelöscht."
+/>
 <Footer />
 </template>
 
