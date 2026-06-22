@@ -101,9 +101,10 @@ async function submitReview() {
     class="review-textarea" 
     :class="{ 'input-error': errors.comment }"
     placeholder="Erzähl anderen von deiner Erfahrung..."
+    maxlength="1000"
     @input="errors.comment = ''"
     />
-  <div v-if="errors.rating" class="invalid-feedback d-block">
+  <div v-if="errors.comment" class="invalid-feedback d-block">
       {{ errors.comment }}
   </div>
 </div>

@@ -95,7 +95,7 @@ watch(isAuthenticated, () => {
                     >
                         <RouterLink to="/admin/meldungen">
                             <Button variant="secondary">
-                                Gemeldete Profile
+                                Moderation
                             </Button>
                         </RouterLink>
                     </li>

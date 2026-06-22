@@ -140,6 +140,10 @@ export function validateReview(review, errors) {
 
   if (!review.comment?.trim()) {
     errors.comment = 'Bitte schreibe einen Kommentar'
+  }else if (review.comment.trim().length < 3) {
+    errors.comment = 'Kommentar muss mindestens 3 Zeichen lang sein'
+  } else if (review.comment.trim().length > 1000) {
+    errors.comment = 'Kommentar darf maximal 1000 Zeichen lang sein'
   }
 
   return Object.values(errors).every(error => error === '')
