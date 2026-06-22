@@ -25,9 +25,7 @@ onMounted(async () => {
 
 async function fetchAusschreibungen() {
   try {
-
     const token = await getAccessTokenSilently()
-
     const profileResponse = await fetch(
       `${import.meta.env.VITE_API_BASE_URL}/api/profile`,
       {
@@ -41,21 +39,17 @@ async function fetchAusschreibungen() {
       const profile = await profileResponse.json()
       role.value = profile.role
     }
-
     const response = await fetch(url, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
-
     if (!response.ok) {
       throw new Error(
         `HTTP error! status: ${response.status}`
       )
     }
-
     ausschreibungen.value = await response.json()
-
   } catch (error) {
     console.error(
       'Error fetching ausschreibungen:',
@@ -63,18 +57,13 @@ async function fetchAusschreibungen() {
     )
   }
 }
-
 </script>
 
 <template>
-
 <Navbar/>
-
 <section class="container py-5">
-
  <h1 class="text-center fw-bold mb-4">
   Meine Ausschreibungen
-
 </h1>
 
 <div
@@ -92,6 +81,7 @@ async function fetchAusschreibungen() {
   >
     <AusschreibungCard
       :ausschreibung="ausschreibung"
+      :show-status="true"
     />
   </div>
 </div>

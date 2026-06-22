@@ -16,6 +16,10 @@ const selectedId = ref(null)
 const showConfirmDelete = ref(false)
 const showDeleteSuccess = ref(false)
 
+onMounted(() => {
+  fetchAusschreibungen()
+})
+
 async function fetchAusschreibungen() {
   const response = await fetch(
     `${import.meta.env.VITE_API_BASE_URL}/api/ausschreibungen`
@@ -64,9 +68,14 @@ async function deleteAusschreibung(id) {
   }
 }
 
-onMounted(() => {
-  fetchAusschreibungen()
-})
+function statusLabel(status) {
+  const labels = {
+    VERFUEGBAR: 'Verfügbar',
+    VERGEBEN: 'Vergeben',
+    ABGESCHLOSSEN: 'Abgeschlossen'
+  }
+  return labels[status] || status
+}
 </script>
 
 <template>
@@ -125,7 +134,9 @@ onMounted(() => {
         </td>
 
         <td data-label="Status">
-        {{ a.status }}
+        <span :class="['status-badge', a.status?.toLowerCase()]">
+          {{ statusLabel(a.status) }}
+        </span>
         </td>
 
         <td data-label="Aktion">
@@ -174,6 +185,27 @@ onMounted(() => {
 }
 .table {
   width: 100%;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+.status-badge.verfuegbar {
+  background: #dff5e1;
+  color: green;
+}
+
+.status-badge.vergeben {
+  background: #fff4d6;
+  color: #a97900;
+}
+
+.status-badge.abgeschlossen {
+  background: #ffe1e1;
+  color: red;
 }
 
 @media (max-width: 768px) {

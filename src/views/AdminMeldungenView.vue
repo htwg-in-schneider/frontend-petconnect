@@ -12,6 +12,7 @@ const { getAccessTokenSilently } = useAuth0()
 const meldungen = ref([])
 const reviews = ref([])
 const selectedMeldungId = ref(null)
+const selectedReviewId = ref(null)
 const showDeleteSuccess = ref(false)
 const showConfirmDelete = ref(false)
 const showConfirmDeleteReview = ref(false)
@@ -51,9 +52,14 @@ function askDeleteConfirmation(id) {
   showConfirmDelete.value = true
 }
 
-function cancelDelete() {
+function askDeleteReviewConfirmation(id) { 
   selectedReviewId.value = id
+  showConfirmDeleteReview.value = true
+}
+
+function cancelDelete() {
   showConfirmDelete.value = false
+  showConfirmDeleteReview.value = false
 }
 
 async function deleteMeldung(id) {
