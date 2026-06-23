@@ -70,7 +70,6 @@ async function createAusschreibung() {
       body: JSON.stringify(ausschreibung.value)
     })
     if (!response.ok) {
-      console.log('Backend Antwort:',response.status)
       throw new Error(
         `Fehler beim Erstellen: ${response.status}`
       )

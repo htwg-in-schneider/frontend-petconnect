@@ -14,7 +14,6 @@ const {
 } = useAuth0()
 
 const handleLogin = () => {
-  console.log('Login geklickt')
   loginWithRedirect({
     authorizationParams: {
       prompt: "consent"

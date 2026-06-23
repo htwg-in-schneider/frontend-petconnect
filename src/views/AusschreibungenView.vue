@@ -13,6 +13,7 @@ const animalTypeUrl = `${import.meta.env.VITE_API_BASE_URL}/api/animaltype`
 const animalTypes = ref([])
 const translations = ref({})
 const ausschreibungen = ref([])
+const filterMonth = ref('')
 const search = ref('') /*suchleiste*/
 const filterAnimal = ref('') /*filter für tierart*/
 const filterCompensation = ref('')
@@ -51,29 +52,43 @@ async function fetchTranslations() {
   }
 }
   
-  const filteredAusschreibungen = computed(() => {
-  return ausschreibungen.value.filter(a => {
-     if (a.status !== 'VERFUEGBAR') return false
+ const filteredAusschreibungen = computed(() => {
+  let result = ausschreibungen.value.filter(a => {
+    if (a.status !== 'VERFUEGBAR') return false
 
     const searchText = search.value.toLowerCase()
     const matchesSearch =
       a.city.toLowerCase().includes(searchText) ||
-      a.postalCode.includes(searchText)||
-      (translations.value[a.animalType] || '').toLowerCase().includes(searchText)
+      a.postalCode.includes(searchText)
 
-    const matchesAnimal = filterAnimal.value === '' ||
-      a.animalType === filterAnimal.value
-
-    const matchesCompensation = filterCompensation.value === '' ||
+    const matchesCompensation =
+      filterCompensation.value === '' ||
       a.compensation === filterCompensation.value
 
-    return (
-      matchesSearch &&
-      matchesAnimal &&
-      matchesCompensation
-    )
+    const matchesAnimal =
+      filterAnimal.value === '' ||
+      a.animalType === filterAnimal.value
+
+    return matchesSearch && matchesCompensation && matchesAnimal
   })
+
+  //Monat und Jahr Filter
+  if (filterMonth.value !== '') {
+    result = result.filter(a => {
+      const date = new Date(a.dateFrom)
+
+      const yearMonth =
+        date.getFullYear() +
+        '-' +
+        String(date.getMonth() + 1).padStart(2, '0')
+
+      return yearMonth === filterMonth.value
+    })
+  }
+
+  return result
 })
+
 
 async function fetchAusschreibungen(){
 try {
@@ -83,7 +98,6 @@ try {
         `HTTP error! status: ${response.status}`)}
 
     ausschreibungen.value = await response.json()
-    console.log(ausschreibungen.value)
   } catch (error) {
     console.error('Error fetching ausschreibungen:',error)
   }
@@ -110,7 +124,7 @@ try {
 
  <SearchBar
   v-model="search"
-  placeholder="Suche nach Tierart oder Ort..."
+  placeholder="Suche nach Ort oder PLZ..."
 />
 
 <div class="filter-bar">
@@ -129,6 +143,7 @@ try {
   </option>
   </select>
 
+<!--Vergütung Filter-->
   <select
     v-model="filterCompensation"
     class="filter-item">
@@ -137,6 +152,20 @@ try {
     <option value="Bezahlung">Bezahlung</option>
   </select>
 
+
+<!--MonatundJahr-->
+<div class="date-wrapper">
+<span v-if="!filterMonth" class ="date-placeholder"> Datum wählen </span>
+
+<input
+  type="month"
+  v-model="filterMonth"
+  class="filter-item"
+  min="2026-01"
+  :placeholder="'Datum wählen'"
+/>
+
+</div>
 </div>
 
 <div
@@ -158,7 +187,6 @@ Keine passenden Ausschreibungen gefunden.
     </div>
 </div>
 
-  
 
 </section>
 
@@ -210,6 +238,33 @@ Keine passenden Ausschreibungen gefunden.
   .filter-item {
     width: 100%;
   }
+
+  .date.wrapper{
+    display :flex;
+    flex-direction: column;
+    flex:1;
+  }
+
+.date-label{
+  font-size:0.9rem;
+  color: #777;
+  margin-bottom: 5px;
 }
+.date-input{
+  color:black;
+}
+
+.date-placeholder {
+  position: absolute;
+  top: 50%;
+  left:50%;
+  transform: translateY(-50%,-50%);
+  color: #999;
+  pointer-events: none;
+  font-size: 1rem;
+  
+}
+}
+
 
 </style>

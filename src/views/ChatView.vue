@@ -72,7 +72,6 @@ async function loadMessages() {
       }
     )
   messages.value =await response.json()
-  console.log(messages.value)
   if (messages.value.length > 0) {
   petName.value =
     messages.value[0].ausschreibung.petName

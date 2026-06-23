@@ -60,8 +60,7 @@ async function fetchAusschreibung() {
         `Ausschreibung nicht gefunden`)
     }
     ausschreibung.value = await response.json()
-    console.log(ausschreibung.value.dateFrom)
-console.log(ausschreibung.value.dateTo)
+    
     
   } catch (error) {
     console.error(error)

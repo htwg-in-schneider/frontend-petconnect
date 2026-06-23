@@ -50,7 +50,6 @@ onMounted(async () => {
 
     ausschreibung.value = await response.json();
     await loadOwnerRating()
-    console.log(ausschreibung.value);
   } catch (error) {
     console.error('Fehler beim Laden:', error)
   }
@@ -127,7 +126,6 @@ async function sendReport() {
   }
   try {
     const token = await getAccessTokenSilently()
-    console.log("Owner:", ausschreibung.value.owner)
     const response = await fetch(
       `${import.meta.env.VITE_API_BASE_URL}/api/meldungen/${ausschreibung.value.owner.id}`,
       {
@@ -139,10 +137,9 @@ async function sendReport() {
         body: JSON.stringify(report.value)
       }
     )
-    console.log("Status:", response.status)
     if (!response.ok) {
       const text = await response.text()
-      console.log(text)
+    
     }
     showReportPopup.value = false
     showReportSuccess.value = true
@@ -383,8 +380,14 @@ async function loadOwnerRating() {
 
 .detail-image {
     width: 100%;
-    border-radius: 25px;
+    max-width: 600px;
+    max-height: 300px;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    border-radius: 20px;
     margin-bottom: 20px;
+    display: block;
+    margin: 0 auto 20px auto;
 }
 
 .back-link {
@@ -395,20 +398,21 @@ async function loadOwnerRating() {
 
 .info-line {
     margin-bottom: 15px;
-    font-size: 1.5rem;
+    font-size: 1rem;
 }
 
 .small-icon {
-    width: 100px;
-    margin-right: 10px;
+    width: 80px;
+    height: 60px;
+    margin-right: 8px;
 }
 
 .info-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin-top: 25px;
-    font-size: 1.5rem;
+    gap: 10px;
+    margin-top: 15px;
+    font-size: 1rem;
 }
 
 .info-box {
@@ -422,7 +426,7 @@ async function loadOwnerRating() {
     border-radius: 10px;
     padding: 10px;
     margin-top: 20px;
-    font-size: 1.5rem;
+    font-size: 1rem;
 }
 
 .button-group {
@@ -445,8 +449,8 @@ async function loadOwnerRating() {
 
 .owner-card {
   border: 2px solid #D0A6A6;
-  border-radius: 30px;
-  padding: 40px;
+  border-radius: 20px;
+  padding: 16px;
   margin-top: 30px;
 }
 
@@ -465,7 +469,7 @@ async function loadOwnerRating() {
 }
 
 .owner-name {
-  font-size: 3rem;
+  font-size: 1.4rem;
   font-weight: bold;
 }
 

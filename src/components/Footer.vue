@@ -11,8 +11,7 @@ import FooterLink from '@/components/FooterLink.vue'
 
     |
     <router-link to="/datenschutz">Datenschutz</router-link>
-    |
-    <FooterLink text="Kontakt" label="Zur Kontaktseite" href="#"/>
+
   </p>
 
 </footer>

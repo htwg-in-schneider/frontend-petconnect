@@ -89,12 +89,13 @@ function statusLabel(status) {
 }
 .card-image {
     width: 100%;
-    height: 250px;
+    height: 160px;
     object-fit: cover;
 }
 .small-icon {
-    width: 80px;
-    margin-right: 8px;
+    width: 18px;
+    height: 18px;
+    margin-right: 6px;
 }
 .badge-custom {
     position: absolute;
@@ -102,9 +103,10 @@ function statusLabel(status) {
     bottom: 15px;
     background-color: #B7A17A;
     color: white;
-    padding: 10px 18px;
+    padding: 8px 14px;
     border-radius: 20px;
     font-weight: bold;
+    font-size:0.8rem;
 }
 .status-badge {
   position: absolute;
@@ -128,13 +130,15 @@ background: #ffe1e1;
   color: red;
 }
 .card-content {
-    padding: 20px;
+    padding: 12px;
 }
 .card-content h3 {
     font-weight: bold;
+    font-size:1rem;
     margin-bottom: 15px;
 }
 .card-content p{
-  font-size: 1.2rem;
+  font-size: 0.9rem;
+  margin-bottom:8px;
 }
 </style>
