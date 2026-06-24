@@ -1,6 +1,11 @@
 <script setup>
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
+import Button from '@/components/Button.vue'
+
+function goBack() {
+  window.history.back()
+}
 
 </script>
 <template>
@@ -8,6 +13,14 @@ import Footer from '@/components/Footer.vue'
   <Navbar />
   <section class="kontakt py-5">
     <div class="container">
+      <Button
+    variant="secondary"
+    class="mb-3"
+    @click="goBack"
+    >
+      ← Zur Homepage
+    </Button>
+      
       <h1>Datenschutz</h1>
       <div class="box">
       <h2>1. Verantwortlicher</h2>

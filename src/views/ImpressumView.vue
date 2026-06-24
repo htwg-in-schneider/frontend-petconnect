@@ -1,6 +1,7 @@
 <script setup>
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
+import Button from '@/components/Button.vue'
 import { ref } from 'vue'
 
 const name = ref('')
@@ -16,12 +17,24 @@ const sendMail = () => {
   window.location.href =
     `mailto:deine-mail@domain.de?subject=${subject}&body=${body}`
 }
+
+function goBack() {
+  window.history.back()
+}
 </script>
 
 <template>
   <Navbar />
   <section class="kontakt py-5">
     <div class="container">
+
+      <Button
+    variant="secondary"
+    class="mb-3"
+    @click="goBack"
+    >
+      ← Zur Homepage
+    </Button>
       <h1>Impressum</h1>
     
     <div class="adresse-box">
