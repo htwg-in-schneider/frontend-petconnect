@@ -41,7 +41,7 @@ watch(isAuthenticated, () => {
 <nav class="navbar navbar-expand-lg">
     <div class="container">
         <img src="../assets/images/logo.jpg" width="60" class="me-2" alt="PetConnectLogo"> 
-        <a class="navbar-brand" href="#">PetConnect</a>
+        <a class="navbar-brand me-auto" href="#">PetConnect</a>
 
         <div class="d-flex align-items-center order-lg-last ms-auto ms-lg-0">
             <UserMenu class="ms-2 me-2 me-lg-0" />
