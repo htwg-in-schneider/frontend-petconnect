@@ -18,7 +18,6 @@ const {
 } = useAuth0()
 
 const profileData = ref(null)
-const bearerToken = ref('')
 const error = ref('')
 const showSaveSuccess = ref(false)
 const showSaveError = ref(false)
@@ -31,7 +30,6 @@ onMounted(async () => {
   if (isAuthenticated.value) {
     try {
       const token = await getAccessTokenSilently()
-      bearerToken.value = token
       const response = await fetch(`${baseUrl}/api/profile`, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -53,11 +51,6 @@ onMounted(async () => {
 
 function goBack() {
   window.history.back()
-}
-
-function copyToClipboard(event) {
-  event.target.select()
-  navigator.clipboard.writeText(event.target.value)
 }
 
 function getRoleName(role) {
@@ -199,46 +192,8 @@ class="mt-3"
     Änderungen speichern
     </button>
   </div>
-        <div class="mt-4 text-start">
-
-          <details>
-
-            <summary
-              class="btn btn-sm btn-outline-secondary mb-2"
-            >
-              OAuth2-Debug-Info
-            </summary>
-
-            <div class="mb-3">
-
-              <label class="form-label">
-                Auth0 User:
-              </label>
-
-              <pre class="bg-light p-3 rounded border">
-<code>{{ JSON.stringify(user, null, 2) }}</code>
-              </pre>
-
-              <label class="form-label">
-                Bearer Token:
-              </label>
-
-              <textarea
-                class="form-control"
-                rows="4"
-                readonly
-                @click="copyToClipboard"
-              >{{ bearerToken }}</textarea>
-
-            </div>
-
-          </details>
-
-        </div>
-
-      </div>
-
-    </div>
+</div>
+</div>
 
     <div
       v-else-if="error"

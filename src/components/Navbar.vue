@@ -43,7 +43,7 @@ watch(isAuthenticated, () => {
         <img src="../assets/images/logo.jpg" width="60" class="me-2" alt="PetConnectLogo"> 
         <a class="navbar-brand" href="#">PetConnect</a>
 
-        <div class="d-flex align-items-center order-lg-last">
+        <div class="d-flex align-items-center order-lg-last ms-auto ms-lg-0">
             <UserMenu class="ms-2 me-2 me-lg-0" />
             <button
             class="navbar-toggler ms-2"
