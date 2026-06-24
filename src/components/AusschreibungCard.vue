@@ -93,8 +93,8 @@ function statusLabel(status) {
     object-fit: cover;
 }
 .small-icon {
-    width: 18px;
-    height: 18px;
+    width: 70px;
+    height: 45px;
     margin-right: 6px;
 }
 .badge-custom {
