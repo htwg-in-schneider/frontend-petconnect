@@ -24,6 +24,7 @@ const showReportPopup = ref(false)
 const showReportSuccess = ref(false)
 const ownerAverageRating = ref(null)
 const ownerReviewCount = ref(0)
+const ownerReviews = ref([])
 
 const report = ref({
   grund: '',
@@ -50,6 +51,7 @@ onMounted(async () => {
 
     ausschreibung.value = await response.json();
     await loadOwnerRating()
+    await loadOwnerReviews()
   } catch (error) {
     console.error('Fehler beim Laden:', error)
   }
@@ -203,6 +205,16 @@ async function loadOwnerRating() {
     ownerReviewCount.value = reviews.length
   }
 }
+
+async function loadOwnerReviews() {
+  if (!ausschreibung.value?.owner?.id) return
+  const response = await fetch(
+    `${import.meta.env.VITE_API_BASE_URL}/api/review/user/${ausschreibung.value.owner.id}`
+  )
+  if (response.ok) {
+    ownerReviews.value = await response.json()
+  }
+}
 </script>
 
 <template>
@@ -322,6 +334,29 @@ async function loadOwnerRating() {
   </Button>
 </div>
 </div>
+</div>
+
+<div
+  v-if="ownerReviews.length > 0 && isAuthenticated && !canEdit"
+  class="reviews-section"
+>
+  <h3>Bewertungen</h3>
+  <div
+    v-for="review in ownerReviews"
+    :key="review.id"
+    class="review-card"
+  >
+    <div class="review-header">
+      <strong>{{ review.reviewer?.firstName }}</strong>
+      <span class="stars">
+        {{ '★'.repeat(review.stars) }}{{ '☆'.repeat(5 - review.stars) }}
+      </span>
+    </div>
+    <p class="review-text">{{ review.text }}</p>
+    <small class="review-meta">
+      <small>🐾 {{ review.ausschreibung?.petName }}</small>
+    </small>
+  </div>
 </div>
 
   <div v-if="canEdit" class="button-group">
@@ -494,6 +529,44 @@ async function loadOwnerRating() {
 .rating-count {
   color: #888;
   font-size: 0.95rem;
+}
+
+.reviews-section {
+  margin-top: 30px;
+}
+
+.reviews-section h3 {
+  margin-bottom: 15px;
+}
+
+.review-card {
+  border: 2px solid #D0A6A6;
+  border-radius: 15px;
+  padding: 15px 20px;
+  margin-bottom: 15px;
+  background: white;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.stars {
+  color: #FFC107;
+  font-size: 1.1rem;
+}
+
+.review-text {
+  margin: 8px 0;
+  color: #444;
+}
+
+.review-meta {
+  color: #888;
+  font-size: 0.9rem;
 }
 
 </style>
