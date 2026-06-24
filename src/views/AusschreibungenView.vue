@@ -13,7 +13,8 @@ const animalTypeUrl = `${import.meta.env.VITE_API_BASE_URL}/api/animaltype`
 const animalTypes = ref([])
 const translations = ref({})
 const ausschreibungen = ref([])
-const filterMonth = ref('')
+const filterYear = ref('')
+const filterMonthNum = ref('')
 const search = ref('') /*suchleiste*/
 const filterAnimal = ref('') /*filter für tierart*/
 const filterCompensation = ref('')
@@ -24,6 +25,13 @@ onMounted(async () => {
     fetchAnimalTypes(),
     fetchTranslations()
   ])
+})
+
+const availableYears = computed(() => {
+  const years = ausschreibungen.value.map(a =>
+    new Date(a.dateFrom).getFullYear()
+  )
+  return [...new Set(years)].sort()
 })
 
 function goBack() {
@@ -73,16 +81,16 @@ async function fetchTranslations() {
   })
 
   //Monat und Jahr Filter
-  if (filterMonth.value !== '') {
+ if (filterYear.value !== '' || filterMonthNum.value !== '') {
     result = result.filter(a => {
       const date = new Date(a.dateFrom)
-
-      const yearMonth =
-        date.getFullYear() +
-        '-' +
-        String(date.getMonth() + 1).padStart(2, '0')
-
-      return yearMonth === filterMonth.value
+      const matchesYear =
+        filterYear.value === '' ||
+        date.getFullYear() === Number(filterYear.value)
+      const matchesMonth =
+        filterMonthNum.value === '' ||
+        date.getMonth() + 1 === Number(filterMonthNum.value)
+      return matchesYear && matchesMonth
     })
   }
 
@@ -154,19 +162,33 @@ try {
 
 
 <!--MonatundJahr-->
-<div class="date-wrapper">
-<span v-if="!filterMonth" class ="date-placeholder"> Datum wählen </span>
+ <select v-model="filterMonthNum" class="filter-item">
+      <option value="">Alle Monate</option>
+      <option value="1">Januar</option>
+      <option value="2">Februar</option>
+      <option value="3">März</option>
+      <option value="4">April</option>
+      <option value="5">Mai</option>
+      <option value="6">Juni</option>
+      <option value="7">Juli</option>
+      <option value="8">August</option>
+      <option value="9">September</option>
+      <option value="10">Oktober</option>
+      <option value="11">November</option>
+      <option value="12">Dezember</option>
+    </select>
 
-<input
-  type="month"
-  v-model="filterMonth"
-  class="filter-item"
-  min="2026-01"
-  :placeholder="'Datum wählen'"
-/>
-
-</div>
-</div>
+<select v-model="filterYear" class="filter-item">
+      <option value="">Alle Jahre</option>
+      <option
+        v-for="year in availableYears"
+        :key="year"
+        :value="year"
+      >
+        {{ year }}
+      </option>
+    </select>
+  </div>
 
 <div
   v-if="filteredAusschreibungen.length === 0"
